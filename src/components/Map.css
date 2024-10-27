@@ -1,0 +1,11 @@
+.gm-style .gm-style-iw-d::-webkit-scrollbar-track, 
+.gm-style .gm-style-iw-d::-webkit-scrollbar-track-piece,
+.gm-style .gm-style-iw-c,
+.gm-style .gm-style-iw-t::after { 
+  /* background: red; */
+  background: rgb(233, 233,233, 0.5);
+}
+.gm-style .gm-style-iw-tc::after { 
+    /* background: rgb(200, 255, 0); */
+    background: rgb(233, 233,233, 0.5);
+  }

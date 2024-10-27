@@ -1,21 +1,15 @@
 import Map from "./components/Map";
-import { mapOptions } from "./components/MapConfiguration";
-import { useJsApiLoader } from "@react-google-maps/api";
 
-
+const GOOGLE_MAPS_API_KEY=process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 function App() {
-  const { isLoaded } = useJsApiLoader({
-    id: mapOptions.googleMapApikey,
-    googleMapsApiKey: mapOptions.googleMapApikey,
-  });
   return (
     <div className="App">
       <h1>
         React Google map Api
       </h1>
-      <Map isLoaded={isLoaded} />
+      <Map id={GOOGLE_MAPS_API_KEY} />
+      
     </div>
   )
 }
-
 export default App;
