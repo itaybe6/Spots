@@ -12,7 +12,7 @@ const Map = (props) => {
     const [currentPosition, setCurrentPosition] = useState(null);
 
     
-
+    console.log(props.id)
     const containerStyle = {
         width: '90vw',
         height: '90vh',
