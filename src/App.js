@@ -3,7 +3,7 @@ import { mapOptions } from "./components/MapConfiguration";
 import { useJsApiLoader } from "@react-google-maps/api";
 
 
-function App(){
+function App() {
   const { isLoaded } = useJsApiLoader({
     id: mapOptions.googleMapApikey,
     googleMapsApiKey: mapOptions.googleMapApikey,
@@ -11,9 +11,9 @@ function App(){
   return (
     <div className="App">
       <h1>
-        React Google map Api 
+        React Google map Api
       </h1>
-      <Map isLoaded={isLoaded}/>
+      <Map isLoaded={isLoaded} />
     </div>
   )
 }
