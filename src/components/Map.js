@@ -3,8 +3,7 @@ import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from '@react-google-map
 import { mapOptions } from './MapConfiguration';
 import CustomMarker from '../assets/images/Restaurant.png';
 import Drinks from '../assets/images/Drinks.png';
-import "./Map.css";
-
+import "../style/Map.css"
 const Map = (props) => {
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey :props.id,
