@@ -1,39 +1,47 @@
 const mongoose = require('mongoose');
-const Review = require('./review'); // יבוא של הסכמה של ביקורות
+const Review = require('./review'); // Importing the review schema
 
 const SpotSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   placeId: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   location: {
     lat: {
       type: Number,
-      required: true
+      required: true,
     },
     lng: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   type: {
     type: String,
     enum: ['Restaurant', 'Bar', 'Club', 'Spa', 'Playground', 'Workshop', 'Park'],
-    required: true
+    required: true,
   },
   rating: {
     type: Number,
-    default: 0
+    default: 0,
+  },
+  photo: {
+    type: String, // Store the photo URL
+    required: false, // Make it optional
+  },
+  allTypes: {
+    type: [String], // Array of strings for all types
+    required: false, // Make it optional
   },
   reviews: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Review'
-  }]
+    ref: 'Review',
+  }],
 });
 
 module.exports = mongoose.model('Spot', SpotSchema);
