@@ -28,16 +28,6 @@ const Map = () => {
     height: '90vh',
   };
 
-  const savePlaces = async () => {
-    try {
-      const response = await axios.post('http://localhost:5001/api/save-places', { places });
-      console.log('Places saved successfully:', response.data);
-    } catch (error) {
-      console.error('Error saving places:', error);
-    }
-  };
-  
-
   const fetchNearbyPlaces = async () => {
     try {
       const response = await axios.get('http://localhost:8010/proxy/maps/api/place/nearbysearch/json', {
@@ -48,7 +38,7 @@ const Map = () => {
           key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
         },
       });
-
+  
       const filteredPlaces = response.data.results
         .filter((place) =>
           ['restaurant', 'bar', 'cafe', 'night_club', 'spa', 'park'].some((type) =>
@@ -62,17 +52,26 @@ const Map = () => {
             ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
             : null
         }));
-
+  
       setPlaces(filteredPlaces);
-      console.log("dolev places "+ places);
-
-      // שמירת זמן הפעלת הפונקציה ב- localStorage
+      console.log("Filtered Places:", filteredPlaces); // Log the filtered places array
+  
+      // Call savePlaces after updating places
+      savePlaces(filteredPlaces);
+  
       localStorage.setItem("lastFetchTime", Date.now());
-
-      // קריאה לפונקציה savePlaces אחרי שליפת הנתונים
-      savePlaces();
     } catch (error) {
       console.error('Error fetching places:', error);
+    }
+  };
+  
+  const savePlaces = async (placesToSave) => {
+    try {
+      console.log('Places to be saved:', placesToSave);
+      const response = await axios.post('http://localhost:5001/api/save-places', { places: placesToSave });
+      console.log('Places saved successfully:', response.data);
+    } catch (error) {
+      console.error('Error saving places:', error);
     }
   };
 
@@ -82,9 +81,9 @@ const Map = () => {
       const now = Date.now();
       const dayInMs = 24 * 60 * 60 * 1000;
   
-      // בדוק אם עברו 24 שעות
+      // Check if 24 hours have passed
       // if (!lastFetchTime || now - lastFetchTime > dayInMs) {
-      fetchNearbyPlaces();
+        fetchNearbyPlaces();
       // }
     }
   }, [isLoaded]);

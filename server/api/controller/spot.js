@@ -1,41 +1,8 @@
-// const Spot = require('../models/spot');
+// controller/spot.js
 
-// async function savePlacesToDatabase(places) {
-//   try {
-//     const savedPlaces = [];
+const Spot = require('../models/spot'); // Ensure this path is correct
 
-//     for (const place of places) {
-//       const newSpot = new Spot({
-//         name: place.name,
-//         placeId: place.place_id,
-//         location: {
-//           lat: place.location.lat,
-//           lng: place.location.lng,
-//         },
-//         type: place.type, // ודא שהסוג תואם ל-enum שהגדרת
-//         rating: place.rating || 0, // אם אין דירוג, שמור 0 כברירת מחדל
-//         photo: place.photo || "", // במידה ואין תמונה
-//         allTypes: place.allTypes || [],
-//         reviews: place.reviews || []
-//       });
-
-//       const savedSpot = await newSpot.save();
-//       savedPlaces.push(savedSpot);
-//     }
-
-//     return savedPlaces;
-//   } catch (error) {
-//     console.error("Error saving places to database:", error);
-//     throw error;
-//   }
-// }
-
-// module.exports = { savePlacesToDatabase };
-
-
-
-const Spot = require('../models/spot'); // ודא שהנתיב נכון למודל שלך
-
+// Function to save places to the database
 const savePlacesToDatabase = async (places) => {
   try {
     const savedPlaces = [];
@@ -47,11 +14,11 @@ const savePlacesToDatabase = async (places) => {
           lat: place.geometry.location.lat,
           lng: place.geometry.location.lng,
         },
-        type: place.types[0], // נניח שהסוג הראשון הוא העיקרי
+        type: place.types[0], // Assume the first type is the primary
         rating: place.rating || 0,
-        photo: place.photoUrl || "", // השתנה מ-photo ל-photoUrl
-        allTypes: place.types, // שימוש במערך של סוגים
-        reviews: place.reviews || [] // במידה ויש ביקורות
+        photoUrl: place.photoUrl || "", // Changed from 'photo' to 'photoUrl'
+        allTypes: place.types, // Use an array for all types
+        reviews: place.reviews || [] // In case there are reviews
       });
 
       const savedSpot = await newSpot.save();
@@ -59,11 +26,23 @@ const savePlacesToDatabase = async (places) => {
     }
     return savedPlaces;
   } catch (error) {
-    console.error('Error saving places:', error); // הוספת לוג לשגיאות
+    console.error('Error saving places:', error);
     throw new Error('Failed to save places to database');
+  }
+};
+
+// Function to get all places from the database
+const getAllPlaces = async () => {
+  try {
+    const places = await Spot.find({});
+    return places;
+  } catch (error) {
+    console.error('Error fetching places:', error);
+    throw new Error('Failed to fetch places from database');
   }
 };
 
 module.exports = {
   savePlacesToDatabase,
+  getAllPlaces,
 };

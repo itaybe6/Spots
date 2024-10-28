@@ -23,7 +23,7 @@ const SpotSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['Restaurant', 'Bar', 'Club', 'Spa', 'Playground', 'Workshop', 'Park'],
+    // enum: ['Restaurant', 'Bar', 'Club', 'Spa', 'Playground', 'Workshop', 'Park'],
     required: true
   },
   rating: {
