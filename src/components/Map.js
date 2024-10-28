@@ -14,7 +14,12 @@ const Map = () => {
     libraries: libraries,
   });
 
-  const [currentLocation, setCurrentLocation] = useState(null);
+  const telAvivCenter = {
+    lat: 32.0853,
+    lng: 34.7818,
+  };
+
+  const [currentLocation, setCurrentLocation] = useState(telAvivCenter);
   const [places, setPlaces] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
 
@@ -23,21 +28,17 @@ const Map = () => {
     height: '90vh',
   };
 
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setCurrentLocation({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-      },
-      (error) => console.error("Error fetching current location:", error)
-    );
-  }, []);
+  const savePlaces = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/save-places', { places });
+      console.log('Places saved successfully:', response.data);
+    } catch (error) {
+      console.error('Error saving places:', error);
+    }
+  };
+
 
   const fetchNearbyPlaces = async () => {
-    if (!currentLocation) return;
-
     try {
       const response = await axios.get('http://localhost:8010/proxy/maps/api/place/nearbysearch/json', {
         params: {
@@ -64,19 +65,29 @@ const Map = () => {
 
       setPlaces(filteredPlaces);
       console.log(filteredPlaces);
+
+      // שמירת זמן הפעלת הפונקציה ב- localStorage
+      localStorage.setItem("lastFetchTime", Date.now());
     } catch (error) {
       console.error('Error fetching places:', error);
     }
   };
 
   useEffect(() => {
-    if (isLoaded && currentLocation) {
-      fetchNearbyPlaces();
+    if (isLoaded) {
+      const lastFetchTime = localStorage.getItem("lastFetchTime");
+      const now = Date.now();
+      const dayInMs = 24 * 60 * 60 * 1000;
+
+      // בדיקה אם עברו 24 שעות מאז הפעלת הפונקציה האחרונה
+      //if (!lastFetchTime || now - lastFetchTime > dayInMs) {
+        
+        fetchNearbyPlaces();
+      //}
     }
-  }, [isLoaded, currentLocation]);
+  }, [isLoaded]);
 
   if (!isLoaded) return <div>Loading Google Maps...</div>;
-  if (!currentLocation) return <div>Loading current location...</div>;
 
   return (
     <GoogleMap
@@ -90,14 +101,10 @@ const Map = () => {
       {places.map((place) => (
         <Marker
           key={place.place_id}
-          position={
-            place.geometry && place.geometry.location
-              ? {
-                  lat: place.geometry.location.lat, // Fixed access
-                  lng: place.geometry.location.lng, // Fixed access
-                }
-              : null
-          }
+          position={{
+            lat: place.geometry.location.lat,
+            lng: place.geometry.location.lng,
+          }}
           options={{
             icon: {
               url: place.types.includes('bar') ? Drinks : CustomMarker,
@@ -110,20 +117,16 @@ const Map = () => {
 
       {selectedPlace && (
         <InfoWindow
-          position={
-            selectedPlace.geometry && selectedPlace.geometry.location
-              ? {
-                  lat: selectedPlace.geometry.location.lat, // Fixed access
-                  lng: selectedPlace.geometry.location.lng, // Fixed access
-                }
-              : currentLocation
-          }
+          position={{
+            lat: selectedPlace.geometry.location.lat,
+            lng: selectedPlace.geometry.location.lng,
+          }}
           onCloseClick={() => setSelectedPlace(null)}
         >
           <PlaceInfo
             name={selectedPlace.name}
             address={selectedPlace.vicinity}
-            coordinates={selectedPlace.geometry ? selectedPlace.geometry.location : null}
+            coordinates={selectedPlace.geometry.location}
             types={selectedPlace.types}
             rating={selectedPlace.rating}
             photo={selectedPlace.photoUrl}
