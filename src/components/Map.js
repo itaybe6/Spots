@@ -30,13 +30,13 @@ const Map = () => {
 
   const savePlaces = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/save-places', { places });
+      const response = await axios.post('http://localhost:5001/api/save-places', { places });
       console.log('Places saved successfully:', response.data);
     } catch (error) {
       console.error('Error saving places:', error);
     }
   };
-
+  
 
   const fetchNearbyPlaces = async () => {
     try {
@@ -64,10 +64,13 @@ const Map = () => {
         }));
 
       setPlaces(filteredPlaces);
-      console.log(filteredPlaces);
+      console.log("dolev places "+ places);
 
       // שמירת זמן הפעלת הפונקציה ב- localStorage
       localStorage.setItem("lastFetchTime", Date.now());
+
+      // קריאה לפונקציה savePlaces אחרי שליפת הנתונים
+      savePlaces();
     } catch (error) {
       console.error('Error fetching places:', error);
     }
@@ -78,12 +81,11 @@ const Map = () => {
       const lastFetchTime = localStorage.getItem("lastFetchTime");
       const now = Date.now();
       const dayInMs = 24 * 60 * 60 * 1000;
-
-      // בדיקה אם עברו 24 שעות מאז הפעלת הפונקציה האחרונה
-      //if (!lastFetchTime || now - lastFetchTime > dayInMs) {
-        
-        fetchNearbyPlaces();
-      //}
+  
+      // בדוק אם עברו 24 שעות
+      // if (!lastFetchTime || now - lastFetchTime > dayInMs) {
+      fetchNearbyPlaces();
+      // }
     }
   }, [isLoaded]);
 
