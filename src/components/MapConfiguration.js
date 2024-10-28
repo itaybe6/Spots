@@ -168,6 +168,6 @@ const MAP_THEME =[
     }
 ];
 export const mapOptions={
-    googleMapApikey : GOOGLE_MAPS_API_KEY,
+    googleMapApiKey : GOOGLE_MAPS_API_KEY,
     mapTheme:MAP_THEME,
 }

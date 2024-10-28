@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
+import React, { useState, useEffect }, { useState, useEffect, useCallback } from 'react';
+import { GoogleMap, InfoWindow, Marker, InfoWindow, useJsApiLoader, useJsApiLoader } from '@react-google-maps/api';
 import { mapOptions } from './MapConfiguration';
 import axios from 'axios';
 import PlaceInfo from './PlaceInfo'; // ייבוא רכיב PlaceInfo
