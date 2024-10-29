@@ -21,6 +21,7 @@ const Map = () => {
 
   const [currentLocation, setCurrentLocation] = useState(telAvivCenter);
   const [places, setPlaces] = useState([]);
+  const [placesget, setPlacesGet] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
 
   const containerStyle = {
@@ -41,23 +42,22 @@ const Map = () => {
   
       const filteredPlaces = response.data.results
         .filter((place) =>
+          place.types && // Check if place.types exists
           ['restaurant', 'bar', 'cafe', 'night_club', 'spa', 'park'].some((type) =>
             place.types.includes(type)
           )
         )
         .map(place => ({
           ...place,
-          types: place.types.filter(type => type !== 'establishment' && type !== 'point_of_interest'),
+          types: place.types ? place.types.filter(type => type !== 'establishment' && type !== 'point_of_interest') : [],
           photoUrl: place.photos && place.photos[0]
             ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
             : null
         }));
   
       setPlaces(filteredPlaces);
-      console.log("Filtered Places:", filteredPlaces); // Log the filtered places array
+      console.log("Filtered Places:", filteredPlaces); 
   
-      // Call savePlaces after updating places
-      savePlaces(filteredPlaces);
   
       localStorage.setItem("lastFetchTime", Date.now());
     } catch (error) {
@@ -75,16 +75,27 @@ const Map = () => {
     }
   };
 
+  // Fetch places from the database
+  const fetchSavedPlaces = async () => {
+    try {
+      const response = await axios.get('http://localhost:5001/api/get-places');
+      console.log('Places from database:', response.data.data);
+      // Optionally, update the `places` state with data from the database if desired
+      setPlacesGet(response.data.data);
+      console.log("dolev database "+ JSON.stringify(placesget));
+    } catch (error) {
+      console.error('Error fetching places from database:', error);
+    }
+  };
+
   useEffect(() => {
     if (isLoaded) {
       const lastFetchTime = localStorage.getItem("lastFetchTime");
       const now = Date.now();
       const dayInMs = 24 * 60 * 60 * 1000;
-  
-      // Check if 24 hours have passed
-      // if (!lastFetchTime || now - lastFetchTime > dayInMs) {
-        fetchNearbyPlaces();
-      // }
+
+      fetchSavedPlaces();
+      // fetchNearbyPlaces();
     }
   }, [isLoaded]);
 
@@ -99,38 +110,42 @@ const Map = () => {
         styles: mapOptions.mapTheme,
       }}
     >
-      {places.map((place) => (
-        <Marker
-          key={place.place_id}
-          position={{
-            lat: place.geometry.location.lat,
-            lng: place.geometry.location.lng,
-          }}
-          options={{
-            icon: {
-              url: place.types.includes('bar') ? Drinks : CustomMarker,
-              scaledSize: new window.google.maps.Size(20, 20),
-            },
-          }}
-          onClick={() => setSelectedPlace(place)}
-        />
+      {placesget.map((place) => (
+        (place.geometry?.location || place.location) ? (
+          <Marker
+
+            key={place.place_id || place._id}
+            position={{
+              lat: place.geometry?.location?.lat || place.location?.lat,
+              lng: place.geometry?.location?.lng || place.location?.lng,
+            }}
+            options={{
+              icon: {
+                url: place.types && place.types.includes('bar') ? Drinks : CustomMarker,
+                scaledSize: new window.google.maps.Size(20, 20),
+              },
+            }}
+            onClick={() => setSelectedPlace(place)}
+          />
+        ) : null 
       ))}
 
       {selectedPlace && (
         <InfoWindow
           position={{
-            lat: selectedPlace.geometry.location.lat,
-            lng: selectedPlace.geometry.location.lng,
+            lat: selectedPlace.geometry?.location?.lat || selectedPlace.location?.lat,
+            lng: selectedPlace.geometry?.location?.lng || selectedPlace.location?.lng,
           }}
           onCloseClick={() => setSelectedPlace(null)}
         >
           <PlaceInfo
             name={selectedPlace.name}
-            address={selectedPlace.vicinity}
-            coordinates={selectedPlace.geometry.location}
-            types={selectedPlace.types}
+            coordinates={selectedPlace.geometry?.location || selectedPlace.location}
+            allTypes={selectedPlace.allTypes} 
+            primaryType={selectedPlace.type}
             rating={selectedPlace.rating}
-            photo={selectedPlace.photoUrl}
+            photo={selectedPlace.photo}
+            
           />
         </InfoWindow>
       )}

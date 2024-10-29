@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const spotRoutes = require('./api/routes/spot'); // בדוק שהנתיב נכון
+const spotRoutes = require('./api/routes/spot'); 
 
 const app = express();
 
