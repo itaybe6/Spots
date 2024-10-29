@@ -80,9 +80,21 @@ const Map = () => {
   const handleReviewSubmit = async (id, review) => {
     try {
       // Make API call to save the review
-      await axios.post('http://localhost:5001/api/add-review', { id, review });
-      console.log('Review submitted successfully');
-      // Optionally fetch reviews again or update local state
+      const response = await axios.post('http://localhost:5001/api/add-review', { id, review });
+      console.log('Review submitted successfully:', response.data);
+      
+      // Update the selectedPlace with the new review in real-time
+      if (selectedPlace) {
+        // Create a new review object with the response data
+        const newReview = {
+          ...review,
+          _id: response.data._id, // Assuming the response contains the new review ID
+          timestamp: Date.now(), // Add a timestamp for the new review
+        };
+        // Update the reviews state of selectedPlace
+        const updatedReviews = [...(selectedPlace.reviews || []), newReview];
+        setSelectedPlace(prev => ({ ...prev, reviews: updatedReviews })); // Update the state with the new reviews
+      }
     } catch (error) {
       console.error('Error submitting review:', error);
     }
@@ -92,7 +104,6 @@ const Map = () => {
   const fetchSavedPlaces = async () => {
     try {
       const response = await axios.get('http://localhost:5001/api/get-places');
-      console.log('Places from database:', response.data.data);
       // Optionally, update the `places` state with data from the database if desired
       setPlacesGet(response.data.data);
       // console.log("dolev database "+ JSON.stringify(placesget));
@@ -107,9 +118,9 @@ const Map = () => {
       const now = Date.now();
       const dayInMs = 24 * 60 * 60 * 1000;
         // Check if 24 hours have passed
-      // if (!lastFetchTime || now - lastFetchTime > dayInMs) {
+      if (!lastFetchTime || now - lastFetchTime > dayInMs) {
       fetchNearbyPlaces();
-      // }
+      }
 
       fetchSavedPlaces();
 
@@ -139,7 +150,7 @@ const Map = () => {
             }}
             options={{
               icon: {
-                url: place.types && place.types.includes('bar') ? Drinks : CustomMarker,
+                url: place.type.includes('bar') ? Drinks : CustomMarker,
                 scaledSize: new window.google.maps.Size(20, 20),
               },
             }}
@@ -166,6 +177,7 @@ const Map = () => {
             reviews={selectedPlace.reviews}
             spotId={selectedPlace.placeId}
             id={selectedPlace._id}
+            address={selectedPlace.adress}
 
             onReviewSubmit={handleReviewSubmit} // Function to handle review submission
 

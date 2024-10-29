@@ -7,14 +7,11 @@ const Review = require('../models/review'); // Import your Review model
 const mongoose = require('mongoose');
 
 
-
-
-
 // Route to save places to the database
 router.post('/save-places', async (req, res) => {
   try {
     const places = req.body.places;
-    console.log("Saving places:", JSON.stringify(req.body.places));
+    //console.log("Saving places:", JSON.stringify(req.body.places));
     const savedPlaces = await savePlacesToDatabase(places);
     res.status(200).json(savedPlaces);
   } catch (error) {
@@ -53,6 +50,9 @@ router.get('/get-places', async (req, res) => {
     res.status(500).json({ message: 'Error fetching places', error });
   }
 });
+
+
+
 
 
 

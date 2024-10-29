@@ -11,8 +11,8 @@ const PlaceInfo = ({
   photo,
   reviews,
   id,
-  spotId,  // Ensure this is included
-  onReviewSubmit  // Ensure this is included
+  spotId,
+  onReviewSubmit
 }) => {
   const [review, setReview] = useState({ rating: '', comment: '' });
 
@@ -26,17 +26,10 @@ const PlaceInfo = ({
     <div>
       <h2>{name}</h2>
       <p>{address}</p>
-      <p>spotId: {spotId}</p>
-      <p>id: {id}</p>
-
-      {/* {coordinates && <p>Coordinates: {coordinates.lat}, {coordinates.lng}</p>} */}
       <p>Primary Type: {primaryType}</p>
-      <p>All Types: {allTypes.join(', ')}</p> Check for undefined
-      {/* <p>reviews: {reviews}</p> Check for undefined */}
-
+      <p>All Types: {allTypes.join(', ')}</p>
       <p>Rating: {rating}</p>
       {photo && <img src={photo} alt={name} style={{ width: '100%', height: '15%' }} />}
-
       <form onSubmit={handleSubmit}>
         <h3>Add a Review</h3>
         <input
@@ -56,6 +49,18 @@ const PlaceInfo = ({
         />
         <button type="submit">Submit Review</button>
       </form>
+      <h3>Reviews:</h3>
+      {reviews && reviews.length > 0 ? (
+        reviews.map((review) => (
+          <div key={review._id}>
+            <p>Rating: {review.rating}</p>
+            <p>Comment: {review.comment}</p>
+            <p>Timestamp: {new Date(review.timestamp).toLocaleString()}</p>
+          </div>
+        ))
+      ) : (
+        <p>No reviews available.</p>
+      )}
     </div>
   );
 };

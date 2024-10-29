@@ -19,7 +19,7 @@ const savePlacesToDatabase = async (places) => {
         },
         type: place.types[0], // Assume the first type is the primary
         rating: place.rating || 0,
-        photoUrl: place.photoUrl || "", // Changed from 'photo' to 'photoUrl'
+        photo: place.photoUrl || "", // Changed from 'photo' to 'photoUrl'
         allTypes: place.types, // Use an array for all types
         reviews: place.reviews || [] // In case there are reviews
       });
@@ -49,7 +49,6 @@ const getAllPlaces = async () => {
 const addReview = async (reviewData) => { // Changed parameter name for clarity
   const savedReview = [];
   const now = Date.now();
-  console.log("dolev review 111 " + reviewData.rating + reviewData.comment);
   try {
     // Create a new review
     const newReview = new Review({
@@ -66,6 +65,8 @@ const addReview = async (reviewData) => { // Changed parameter name for clarity
     throw new Error('Failed to save review to database'); // Adjusted error message
   }
 };
+
+
 
 module.exports = {
   savePlacesToDatabase,
