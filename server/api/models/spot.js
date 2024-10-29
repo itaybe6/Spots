@@ -1,8 +1,13 @@
 const mongoose = require('mongoose');
-const Review = require('./review'); // יבוא של הסכמה של ביקורות
+const reviewSchema = require('./review').schema; // Import the schema, not the model
+
 
 const SpotSchema = new mongoose.Schema({
   name: {
+    type: String,
+    required: true
+  },
+  adress: {
     type: String,
     required: true
   },
@@ -30,10 +35,8 @@ const SpotSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  reviews: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Review'
-  }],
+  reviews: [reviewSchema],  // Embedding ReviewSchema directly
+
   photo: {
     type: String,
   },

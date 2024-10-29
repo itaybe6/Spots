@@ -32,7 +32,7 @@ const PlaceInfo = ({
       {/* {coordinates && <p>Coordinates: {coordinates.lat}, {coordinates.lng}</p>} */}
       <p>Primary Type: {primaryType}</p>
       <p>All Types: {allTypes.join(', ')}</p> Check for undefined
-      <p>reviews: {reviews}</p> Check for undefined
+      {/* <p>reviews: {reviews}</p> Check for undefined */}
 
       <p>Rating: {rating}</p>
       {photo && <img src={photo} alt={name} style={{ width: '100%', height: '15%' }} />}

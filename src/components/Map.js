@@ -57,7 +57,8 @@ const Map = () => {
   
       setPlaces(filteredPlaces);
       console.log("Filtered Places:", filteredPlaces); 
-  
+      // savePlaces(filteredPlaces);
+
   
       localStorage.setItem("lastFetchTime", Date.now());
     } catch (error) {
@@ -66,6 +67,7 @@ const Map = () => {
   };
   
   const savePlaces = async (placesToSave) => {
+    console.log("dolev hereeeeee");
     try {
       console.log('Places to be saved:', placesToSave);
       const response = await axios.post('http://localhost:5001/api/save-places', { places: placesToSave });
@@ -105,16 +107,17 @@ const Map = () => {
       const now = Date.now();
       const dayInMs = 24 * 60 * 60 * 1000;
         // Check if 24 hours have passed
-      if (!lastFetchTime || now - lastFetchTime > dayInMs) {
-          fetchNearbyPlaces();
-      }
+      // if (!lastFetchTime || now - lastFetchTime > dayInMs) {
+      fetchNearbyPlaces();
+      // }
 
       fetchSavedPlaces();
 
     }
   }, [isLoaded]);
 
-  if (!isLoaded) return <div>Loading Google Maps...</div>;
+  if (!isLoaded) return <div>Loading Google Maps...</div>
+  // console.log("neeed "+ JSON.stringify(places));
 
   return (
     <GoogleMap

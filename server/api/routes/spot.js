@@ -14,7 +14,7 @@ const mongoose = require('mongoose');
 router.post('/save-places', async (req, res) => {
   try {
     const places = req.body.places;
-    // console.log("Saving places:", JSON.stringify(req.body.places));
+    console.log("Saving places:", JSON.stringify(req.body.places));
     const savedPlaces = await savePlacesToDatabase(places);
     res.status(200).json(savedPlaces);
   } catch (error) {
@@ -25,12 +25,9 @@ router.post('/save-places', async (req, res) => {
 
 // POST route to add a review
 router.post('/add-review', async (req, res) => {
-  console.log("dolev review 00" + JSON.stringify(req.body.review));
   try {
     const review = req.body.review;
     const savedReview = await addReview(review);
-    console.log("spot id!!!" + req.body.id);
-
     const id = req.body.id;
     if (mongoose.Types.ObjectId.isValid(id)) {
       await Spot.findByIdAndUpdate(id, { $push: { reviews: savedReview } });

@@ -11,6 +11,7 @@ const savePlacesToDatabase = async (places) => {
     for (const place of places) {
       const newSpot = new Spot({
         name: place.name,
+        adress : place.vicinity,
         placeId: place.place_id,
         location: {
           lat: place.geometry.location.lat,
