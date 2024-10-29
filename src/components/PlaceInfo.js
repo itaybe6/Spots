@@ -1,33 +1,22 @@
 import React, { useState } from 'react';
+import ReviewsList from './ReviewsList';
 
-const PlaceInfo = ({
-  name,
-  address,
-  coordinates,
-  type,
-  primaryType,
-  allTypes,
-  rating,
-  photo,
-  reviews,
-  id,
-  spotId,
-  onReviewSubmit
-}) => {
+const PlaceInfo = ({ selectedPlace, onReviewSubmit }) => {
+  const { name, allTypes, type, rating, photo, reviews, _id, } = selectedPlace;
   const [review, setReview] = useState({ rating: '', comment: '' });
 
   const handleSubmit = (e) => {
     e.preventDefault(); // Prevent default form submission
-    onReviewSubmit(id, review); // Call the review submit function
+    onReviewSubmit(_id, review); // Call the review submit function
     setReview({ rating: '', comment: '' }); // Reset review state
   };
+
 
   return (
     <div>
       <h2>{name}</h2>
-      <p>{address}</p>
-      <p>Primary Type: {primaryType}</p>
-      <p>All Types: {allTypes.join(', ')}</p>
+      <p>Primary Type: {type}</p>
+      <p>All Types: {allTypes?.join(', ')}</p>
       <p>Rating: {rating}</p>
       {photo && <img src={photo} alt={name} style={{ width: '100%', height: '15%' }} />}
       <form onSubmit={handleSubmit}>
@@ -49,18 +38,7 @@ const PlaceInfo = ({
         />
         <button type="submit">Submit Review</button>
       </form>
-      <h3>Reviews:</h3>
-      {reviews && reviews.length > 0 ? (
-        reviews.map((review) => (
-          <div key={review._id}>
-            <p>Rating: {review.rating}</p>
-            <p>Comment: {review.comment}</p>
-            <p>Timestamp: {new Date(review.timestamp).toLocaleString()}</p>
-          </div>
-        ))
-      ) : (
-        <p>No reviews available.</p>
-      )}
+      <ReviewsList reviews={reviews} />
     </div>
   );
 };

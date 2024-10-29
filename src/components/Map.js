@@ -205,19 +205,8 @@ const Map = () => {
               }}
               onCloseClick={() => setSelectedPlace(null)}
             >
-              <PlaceInfo
-                name={selectedPlace.name}
-                coordinates={selectedPlace.geometry?.location || selectedPlace.location}
-                allTypes={selectedPlace.allTypes} 
-                primaryType={selectedPlace.type}
-                rating={selectedPlace.rating}
-                photo={selectedPlace.photo}
-                reviews={selectedPlace.reviews}
-                spotId={selectedPlace.placeId}
-                id={selectedPlace._id}
-                address={selectedPlace.address}
-                onReviewSubmit={handleReviewSubmit}
-              />
+              <PlaceInfo selectedPlace={selectedPlace} onReviewSubmit={handleReviewSubmit} />
+
             </InfoWindow>
           )}
         </GoogleMap>
