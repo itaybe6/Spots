@@ -3,8 +3,11 @@ import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from '@react-google-map
 import { mapOptions } from './MapConfiguration';
 import axios from 'axios';
 import PlaceInfo from './PlaceInfo';
-import CustomMarker from '../assets/images/Restaurant.png';
+import CustomMarker from '../assets/images/images.png';
 import Drinks from '../assets/images/Drinks.png';
+import SpaIcon from '../assets/images/spa.webp';
+import Party from '../assets/images/party.avif';
+
 
 const Map = () => {
   const libraries = ['places'];
@@ -23,6 +26,8 @@ const Map = () => {
   const [places, setPlaces] = useState([]);
   const [placesget, setPlacesGet] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
+  const [selectedType, setSelectedType] = useState('bar'); // State to hold the selected type
+
 
   const containerStyle = {
     width: '90vw',
@@ -76,6 +81,21 @@ const Map = () => {
       console.error('Error saving places:', error);
     }
   };
+
+  const getIconUrl = (placeType) => {
+    const icons = {
+      bar: Drinks,
+      spa: SpaIcon, // Use your spa icon here
+      restaurant: CustomMarker,
+      cafe: CustomMarker,
+      night_club: Party,
+      park: CustomMarker,
+      // Add more types and their respective icons as needed
+    };
+
+    return icons[placeType] || CustomMarker; // Default to CustomMarker if type not found
+  };
+
 
   const handleReviewSubmit = async (id, review) => {
     try {
@@ -131,62 +151,78 @@ const Map = () => {
   // console.log("neeed "+ JSON.stringify(places));
 
   return (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      center={currentLocation}
-      zoom={14}
-      options={{
-        styles: mapOptions.mapTheme,
-      }}
-    >
-      {placesget.map((place) => (
-        (place.geometry?.location || place.location) ? (
-          <Marker
-
-            key={place.place_id || place._id}
-            position={{
-              lat: place.geometry?.location?.lat || place.location?.lat,
-              lng: place.geometry?.location?.lng || place.location?.lng,
-            }}
-            options={{
-              icon: {
-                url: place.type.includes('bar') ? Drinks : CustomMarker,
-                scaledSize: new window.google.maps.Size(20, 20),
-              },
-            }}
-            onClick={() => setSelectedPlace(place)}
-          />
-        ) : null 
-      ))}
-
-      {selectedPlace && (
-        <InfoWindow
-          position={{
-            lat: selectedPlace.geometry?.location?.lat || selectedPlace.location?.lat,
-            lng: selectedPlace.geometry?.location?.lng || selectedPlace.location?.lng,
+      <div>
+        {/* Dropdown for selecting place type */}
+        <div style={{ margin: '10px 0' }}>
+          <label htmlFor="placeType" style={{ marginRight: '10px' }}>Select Place Type:</label>
+          <select
+            id="placeType"
+            value={selectedType}
+            onChange={(e) => setSelectedType(e.target.value)} // Update selected type on change
+            style={{ padding: '5px', fontSize: '16px' }}
+          >
+            <option value="bar">Bar</option>
+            <option value="restaurant">Restaurant</option>
+            <option value="cafe">Café</option>
+            <option value="night_club">Night Club</option>
+            <option value="spa">Spa</option>
+            <option value="park">Park</option>
+          </select>
+        </div>
+  
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={currentLocation}
+          zoom={14}
+          options={{
+            styles: mapOptions.mapTheme,
           }}
-          onCloseClick={() => setSelectedPlace(null)}
         >
-          <PlaceInfo
-            name={selectedPlace.name}
-            coordinates={selectedPlace.geometry?.location || selectedPlace.location}
-            allTypes={selectedPlace.allTypes} 
-            primaryType={selectedPlace.type}
-            rating={selectedPlace.rating}
-            photo={selectedPlace.photo}
-            reviews={selectedPlace.reviews}
-            spotId={selectedPlace.placeId}
-            id={selectedPlace._id}
-            address={selectedPlace.adress}
-
-            onReviewSubmit={handleReviewSubmit} // Function to handle review submission
-
-            
-          />
-        </InfoWindow>
-      )}
-    </GoogleMap>
-  );
-};
-
-export default Map;
+          {placesget.map((place) => (
+            (place.geometry?.location || place.location) ? (
+              <Marker
+                key={place.place_id || place._id}
+                position={{
+                  lat: place.geometry?.location?.lat || place.location?.lat,
+                  lng: place.geometry?.location?.lng || place.location?.lng,
+                }}
+                options={{
+                  icon: {
+                    url: getIconUrl(place.type) ,
+                    scaledSize: new window.google.maps.Size(20, 20),
+                  },
+                }}
+                onClick={() => setSelectedPlace(place)}
+              />
+            ) : null 
+          ))}
+  
+          {selectedPlace && (
+            <InfoWindow
+              position={{
+                lat: selectedPlace.geometry?.location?.lat || selectedPlace.location?.lat,
+                lng: selectedPlace.geometry?.location?.lng || selectedPlace.location?.lng,
+              }}
+              onCloseClick={() => setSelectedPlace(null)}
+            >
+              <PlaceInfo
+                name={selectedPlace.name}
+                coordinates={selectedPlace.geometry?.location || selectedPlace.location}
+                allTypes={selectedPlace.allTypes} 
+                primaryType={selectedPlace.type}
+                rating={selectedPlace.rating}
+                photo={selectedPlace.photo}
+                reviews={selectedPlace.reviews}
+                spotId={selectedPlace.placeId}
+                id={selectedPlace._id}
+                address={selectedPlace.address}
+                onReviewSubmit={handleReviewSubmit}
+              />
+            </InfoWindow>
+          )}
+        </GoogleMap>
+      </div>
+    );
+  };
+  
+  export default Map;
