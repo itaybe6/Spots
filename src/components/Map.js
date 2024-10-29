@@ -75,6 +75,17 @@ const Map = () => {
     }
   };
 
+  const handleReviewSubmit = async (spotId, review) => {
+    try {
+      // Make API call to save the review
+      await axios.post('http://localhost:5001/api/add-review', { spotId, review });
+      console.log('Review submitted successfully');
+      // Optionally fetch reviews again or update local state
+    } catch (error) {
+      console.error('Error submitting review:', error);
+    }
+  };
+
   // Fetch places from the database
   const fetchSavedPlaces = async () => {
     try {
@@ -82,7 +93,7 @@ const Map = () => {
       console.log('Places from database:', response.data.data);
       // Optionally, update the `places` state with data from the database if desired
       setPlacesGet(response.data.data);
-      console.log("dolev database "+ JSON.stringify(placesget));
+      // console.log("dolev database "+ JSON.stringify(placesget));
     } catch (error) {
       console.error('Error fetching places from database:', error);
     }
@@ -93,9 +104,13 @@ const Map = () => {
       const lastFetchTime = localStorage.getItem("lastFetchTime");
       const now = Date.now();
       const dayInMs = 24 * 60 * 60 * 1000;
+        // Check if 24 hours have passed
+      if (!lastFetchTime || now - lastFetchTime > dayInMs) {
+          fetchNearbyPlaces();
+      }
 
       fetchSavedPlaces();
-      // fetchNearbyPlaces();
+
     }
   }, [isLoaded]);
 
@@ -145,6 +160,11 @@ const Map = () => {
             primaryType={selectedPlace.type}
             rating={selectedPlace.rating}
             photo={selectedPlace.photo}
+            reviews={selectedPlace.reviews}
+            spotId={selectedPlace.placeId}
+
+            onReviewSubmit={handleReviewSubmit} // Function to handle review submission
+
             
           />
         </InfoWindow>

@@ -1,6 +1,8 @@
 // controller/spot.js
 
 const Spot = require('../models/spot'); // Ensure this path is correct
+const Review = require('../models/review'); // Ensure this path is correct
+
 
 // Function to save places to the database
 const savePlacesToDatabase = async (places) => {
@@ -42,7 +44,31 @@ const getAllPlaces = async () => {
   }
 };
 
+// Function to add a review
+const addReview = async (reviewData) => { // Changed parameter name for clarity
+  const savedReview = [];
+  const now = Date.now();
+  console.log("dolev review 111 " + reviewData.rating + reviewData.comment);
+  try {
+    // Create a new review
+    const newReview = new Review({
+      rating: reviewData.rating,
+      comment: reviewData.comment,
+      timestamp: now
+    });
+
+    // Save the review
+    const savedNewReview = await newReview.save();
+    savedReview.push(savedNewReview);
+    return savedReview;
+  } catch (error) {
+    console.error('Error saving Review:', error);
+    throw new Error('Failed to save review to database'); // Adjusted error message
+  }
+};
+
 module.exports = {
   savePlacesToDatabase,
   getAllPlaces,
+  addReview,
 };
