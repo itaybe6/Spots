@@ -29,12 +29,14 @@ router.post('/add-review', async (req, res) => {
   try {
     const review = req.body.review;
     const savedReview = await addReview(review);
-    console.log("spot id!!!"+ req.body.spotId);
+    console.log("spot id!!!" + req.body.id);
 
-    // const spotObjectId = mongoose.Types.ObjectId(req.body.spotId);
-    await Spot.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.spotId), { $push: { reviews: savedReview } });
-
-    // await Spot.findByIdAndUpdate(spotObjectId, { $push: { reviews: savedReview } });
+    const id = req.body.id;
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      await Spot.findByIdAndUpdate(id, { $push: { reviews: savedReview } });
+    } else {
+      throw new Error('Invalid ObjectId format');
+    }
 
 
     res.status(201).json(savedReview);

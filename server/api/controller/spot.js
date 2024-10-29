@@ -53,8 +53,7 @@ const addReview = async (reviewData) => { // Changed parameter name for clarity
     // Create a new review
     const newReview = new Review({
       rating: reviewData.rating,
-      comment: reviewData.comment,
-      timestamp: now
+      comment: reviewData.comment
     });
 
     // Save the review

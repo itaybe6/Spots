@@ -10,6 +10,7 @@ const PlaceInfo = ({
   rating,
   photo,
   reviews,
+  id,
   spotId,  // Ensure this is included
   onReviewSubmit  // Ensure this is included
 }) => {
@@ -17,7 +18,7 @@ const PlaceInfo = ({
 
   const handleSubmit = (e) => {
     e.preventDefault(); // Prevent default form submission
-    onReviewSubmit(spotId, review); // Call the review submit function
+    onReviewSubmit(id, review); // Call the review submit function
     setReview({ rating: '', comment: '' }); // Reset review state
   };
 
@@ -26,6 +27,8 @@ const PlaceInfo = ({
       <h2>{name}</h2>
       <p>{address}</p>
       <p>spotId: {spotId}</p>
+      <p>id: {id}</p>
+
       {/* {coordinates && <p>Coordinates: {coordinates.lat}, {coordinates.lng}</p>} */}
       <p>Primary Type: {primaryType}</p>
       <p>All Types: {allTypes.join(', ')}</p> Check for undefined

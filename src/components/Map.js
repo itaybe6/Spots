@@ -75,10 +75,10 @@ const Map = () => {
     }
   };
 
-  const handleReviewSubmit = async (spotId, review) => {
+  const handleReviewSubmit = async (id, review) => {
     try {
       // Make API call to save the review
-      await axios.post('http://localhost:5001/api/add-review', { spotId, review });
+      await axios.post('http://localhost:5001/api/add-review', { id, review });
       console.log('Review submitted successfully');
       // Optionally fetch reviews again or update local state
     } catch (error) {
@@ -162,6 +162,7 @@ const Map = () => {
             photo={selectedPlace.photo}
             reviews={selectedPlace.reviews}
             spotId={selectedPlace.placeId}
+            id={selectedPlace._id}
 
             onReviewSubmit={handleReviewSubmit} // Function to handle review submission
 
