@@ -2,12 +2,12 @@
 import React, { useState } from 'react';
 import './AddReview.css';
 
-const AddReview = ({ onReviewSubmit }) => {
+const AddReview = ({ onReviewSubmit ,_id}) => {
     const [review, setReview] = useState({ rating: '', comment: '' });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onReviewSubmit(review);
+        onReviewSubmit(_id,review);
         setReview({ rating: '', comment: '' });
     };
 

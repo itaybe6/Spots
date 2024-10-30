@@ -36,15 +36,9 @@ const formatDate = (timestamp) => {
     });
 };
 
-const renderStars = (rating) => {
-    const fullStars = Math.floor(rating);
-    const halfStar = rating % 1 !== 0;
-    return '★'.repeat(fullStars) + (halfStar ? '☆' : '') + '☆'.repeat(4 - fullStars);
-};
-
 const calculateAverageRating = (reviews) => {
     if (reviews.length === 0) return 0;
-    const total = reviews.reduce((acc, review) => acc + review.rating, 0);
+    const total = reviews.reduce((acc, review) => acc + (Number(review.rating) || 0), 0); // ודא שכל דירוג הוא מספר
     return (total / reviews.length).toFixed(1);
 };
 
@@ -55,9 +49,6 @@ const ReviewsList = ({ reviews }) => {
         <div className="reviews-container">
             <div className="average-rating">
                 <h3>Average Rating: {averageRating}</h3>
-                <div className="average-stars" style={{ color: getRatingColor(Math.round(averageRating)) }}>
-                    {renderStars(averageRating)}
-                </div>
             </div>
             {reviews && reviews.length > 0 ? (
                 reviews.map((review) => (
@@ -66,7 +57,7 @@ const ReviewsList = ({ reviews }) => {
                             className="review-rating" 
                             style={{ color: getRatingColor(review.rating) }}
                         >
-                            {renderStars(review.rating)} - {review.rating}
+                            Rating: {review.rating}
                         </p>
                         <p className="review-comment">Comment: {review.comment}</p>
                         <div className="review-timestamp">

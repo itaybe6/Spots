@@ -100,6 +100,7 @@ const Map = () => {
   const handleReviewSubmit = async (id, review) => {
     try {
       // Make API call to save the review
+      console.log(id,review)
       const response = await axios.post('http://localhost:5001/api/add-review', { id, review });
       console.log('Review submitted successfully:', response.data);
       

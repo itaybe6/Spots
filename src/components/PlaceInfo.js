@@ -4,7 +4,7 @@ import AddReview from './AddReview';
 import ReviewsList from './ReviewsList';
 
 const PlaceInfo = ({ selectedPlace, onReviewSubmit }) => {
-    const { name, allTypes, type, rating, photo, reviews } = selectedPlace;
+    const { name, allTypes, type, rating, photo, reviews ,_id} = selectedPlace;
 
     return (
         <div>
@@ -13,7 +13,7 @@ const PlaceInfo = ({ selectedPlace, onReviewSubmit }) => {
             <p>All Types: {allTypes?.join(', ')}</p>
             <p>Rating: {rating}</p>
             {photo && <img src={photo} alt={name} style={{ width: '100%', height: '15%' }} />}
-            <AddReview onReviewSubmit={onReviewSubmit} />
+            <AddReview onReviewSubmit={onReviewSubmit} _id = {_id} />
             <ReviewsList reviews={reviews} />
         </div>
     );
