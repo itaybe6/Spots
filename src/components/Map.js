@@ -4,6 +4,13 @@ import { mapOptions } from './MapConfiguration';
 import axios from 'axios';
 import PlaceInfo from './PlaceInfo';
 
+import Restaurant from '../assets/images/Restaurant.png';
+import Spa from '../assets/images/Spa.png';
+import Bar from '../assets/images/Bar.png';
+import Coffee from '../assets/images/Coffee.png';
+import Party from '../assets/images/Party.png';
+
+
 
 import restaurant_green from '../assets/images/restaurant_green.png';
 import restaurant_red from '../assets/images/restaurant_red.png';
@@ -35,6 +42,7 @@ const Map = () => {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries: libraries,
   });
+  const [hoveredMarkerId, setHoveredMarkerId] = useState(null);
 
   const telAvivCenter = {
     lat: 32.0853,
@@ -108,42 +116,49 @@ const Map = () => {
     }
   };
 
-  const getIconUrl = (placeType,rating) => {
-    
-console.log(rating)
+  const getIconUrl = (placeType, rating, isHovered) => {
+    const hoverIcons = {
+        restaurant: Restaurant,
+        bar: Bar,
+        spa: Spa,
+        cafe: Coffee,
+        night_club: Party,
+    };
+
     const greenIcons = {
-      restaurant : restaurant_green,
-      bar: bar_green,
-      spa: spa_green,
-      cafe: coffee_green,
-      night_club: party_green,
-    }
+        restaurant: restaurant_green,
+        bar: bar_green,
+        spa: spa_green,
+        cafe: coffee_green,
+        night_club: party_green,
+    };
+
     const redIcons = {
-      restaurant : restaurant_red,
-      bar: bar_red,
-      spa: spa_red,
-      cafe: coffee_red,
-      night_club: party_red,
-    }
+        restaurant: restaurant_red,
+        bar: bar_red,
+        spa: spa_red,
+        cafe: coffee_red,
+        night_club: party_red,
+    };
+
     const yellowIcons = {
-      restaurant : restaurant_yellow,
-      bar: bar_yellow,
-      spa: spa_yellow,
-      cafe: coffee_yellow,
-      night_club: party_yellow,
+        restaurant: restaurant_yellow,
+        bar: bar_yellow,
+        spa: spa_yellow,
+        cafe: coffee_yellow,
+        night_club: party_yellow,
+    };
+
+    if (isHovered) {
+        // החזרת אייקון הריחוף כאשר העכבר נמצא מעל המרקר
+        return hoverIcons[placeType] || hoverIcons['restaurant'];
     }
-    if (rating >= 4)
-      return greenIcons[placeType] || restaurant_green;
-    
-    if (rating < 4 && rating >= 2.8) 
-      return yellowIcons[placeType] || restaurant_yellow;
-    
-    if (rating < 2.8 )
-      return redIcons[placeType] || restaurant_red;
 
-
+    // בחירת אייקון לפי הדירוג כאשר העכבר לא נמצא מעל המרקר
+    if (rating >= 4) return greenIcons[placeType] || restaurant_green;
+    if (rating < 4 && rating >= 2.8) return yellowIcons[placeType] || restaurant_yellow;
+    return redIcons[placeType] || restaurant_red;
 };
-
 
   const handleReviewSubmit = async (id, review) => {
     try {
@@ -220,25 +235,28 @@ console.log(rating)
           styles: mapOptions.mapTheme,
         }}
       >
-        {placesget.map((place) => (
-          (place.geometry?.location || place.location) ? (
+        {placesget.map((place) => {
+          const placeId = place.place_id || place._id;
+
+          return (place.geometry?.location || place.location) ? (
             <Marker
-              key={place.place_id || place._id}
+              key={placeId}
               position={{
                 lat: place.geometry?.location?.lat || place.location?.lat,
                 lng: place.geometry?.location?.lng || place.location?.lng,
               }}
               options={{
                 icon: {
-                  url: getIconUrl(place.type,place.rating),
+                  url: getIconUrl(place.type, place.rating, hoveredMarkerId === placeId),
                   scaledSize: new window.google.maps.Size(20, 20),
-           
                 },
               }}
+              onMouseOver={() => setHoveredMarkerId(placeId)}
+              onMouseOut={() => setHoveredMarkerId(null)}
               onClick={() => setSelectedPlace(place)}
             />
-          ) : null
-        ))}
+          ) : null;
+        })}
 
         {selectedPlace && (
           <InfoWindow
@@ -246,15 +264,10 @@ console.log(rating)
               lat: selectedPlace.geometry?.location?.lat || selectedPlace.location?.lat,
               lng: selectedPlace.geometry?.location?.lng || selectedPlace.location?.lng,
             }}
-
             onCloseClick={onCloseFunc}
             options={{ zIndex: 999 }}
           >
-
-
             <PlaceInfo selectedPlace={selectedPlace} onReviewSubmit={handleReviewSubmit} />
-
-
           </InfoWindow>
         )}
       </GoogleMap>
