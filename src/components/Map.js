@@ -4,12 +4,27 @@ import { mapOptions } from './MapConfiguration';
 import axios from 'axios';
 import PlaceInfo from './PlaceInfo';
 
-import Drinks from '../assets/images/Drinks.png';
-import Bar from '../assets/images/Bar.png';
-import Coffee from '../assets/images/Coffee.png';
-import Park from '../assets/images/Park.png';
-import Restaurant from '../assets/images/Restaurant.svg';
-import Spa from '../assets/images/Spa.png';
+
+import restaurant_green from '../assets/images/restaurant_green.png';
+import restaurant_red from '../assets/images/restaurant_red.png';
+import restaurant_yellow from '../assets/images/restaurant_yellow.png';
+
+import spa_green from '../assets/images/spa_green.png';
+import spa_red from '../assets/images/spa_red.png';
+import spa_yellow from '../assets/images/spa_yellow.png';
+
+import bar_green from '../assets/images/bar_green.png';
+import bar_red from '../assets/images/bar_red.png';
+import bar_yellow from '../assets/images/bar_yellow.png';
+
+import coffee_green from '../assets/images/coffee_green.png';
+import coffee_red from '../assets/images/coffee_red.png';
+import coffee_yellow from '../assets/images/coffee_yellow.png';
+
+import party_green from '../assets/images/party_green.png';
+import party_red from '../assets/images/party_red.png';
+import party_yellow from '../assets/images/party_yellow.png';
+
 
 
 
@@ -93,18 +108,40 @@ const Map = () => {
     }
   };
 
-  const getIconUrl = (placeType) => {
-    const icons = {
-        bar: Bar,
-        spa: Spa,
-        restaurant: Restaurant,
-        cafe: Coffee,
-        night_club: Drinks,
-        park: Park,
-    };
+  const getIconUrl = (placeType,rating) => {
+    
+console.log(rating)
+    const greenIcons = {
+      restaurant : restaurant_green,
+      bar: bar_green,
+      spa: spa_green,
+      cafe: coffee_green,
+      night_club: party_green,
+    }
+    const redIcons = {
+      restaurant : restaurant_red,
+      bar: bar_red,
+      spa: spa_red,
+      cafe: coffee_red,
+      night_club: party_red,
+    }
+    const yellowIcons = {
+      restaurant : restaurant_yellow,
+      bar: bar_yellow,
+      spa: spa_yellow,
+      cafe: coffee_yellow,
+      night_club: party_yellow,
+    }
+    if (rating >= 4)
+      return greenIcons[placeType] || restaurant_green;
+    
+    if (rating < 4 && rating >= 2.8) 
+      return yellowIcons[placeType] || restaurant_yellow;
+    
+    if (rating < 2.8 )
+      return redIcons[placeType] || restaurant_red;
 
 
-    return icons[placeType] || Restaurant;
 };
 
 
@@ -193,7 +230,7 @@ const Map = () => {
               }}
               options={{
                 icon: {
-                  url: getIconUrl(place.type),
+                  url: getIconUrl(place.type,place.rating),
                   scaledSize: new window.google.maps.Size(20, 20),
            
                 },
