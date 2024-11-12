@@ -1,4 +1,3 @@
-// ReviewsList.js
 import React from 'react';
 import './ReviewsList.css';
 
@@ -51,18 +50,28 @@ const ReviewsList = ({ reviews }) => {
                 <h3>Average Rating: {averageRating}</h3>
             </div>
             {reviews && reviews.length > 0 ? (
-                reviews.map((review) => (
+                [...reviews].reverse().map((review) => (
+
                     <div key={review._id} className="review-item">
-                        <p 
-                            className="review-rating" 
-                            style={{ color: getRatingColor(review.rating) }}
-                        >
-                            Rating: {review.rating}
-                        </p>
-                        <p className="review-comment">Comment: {review.comment}</p>
                         <div className="review-timestamp">
                             <h4>{formatTime(review.timestamp)} - {formatDate(review.timestamp)}</h4>
                         </div>
+                        <p
+                            className="review-rating"
+                            style={{ color: getRatingColor(review.rating) }}
+                        >
+                            דירוג: {review.rating}
+                        </p>
+                        <p className="review-comment">תגובה: {review.comment}</p>
+                        {review.imageData && (
+                            <img
+                                src={`data:image/jpeg;base64,${review.imageData}`}
+                                alt="Review Image"
+                                className="review-image"
+                                style={{ width: '100%', height: 'auto', marginTop: '10px' }}
+                            />
+                        )}
+
                     </div>
                 ))
             ) : (

@@ -27,6 +27,8 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 15px;
     transition: transform 0.3s ease, background-color 0.3s ease;
+     direction: rtl; /* הגדרת כיוון הטקסט מימין לשמאל */
+    text-align: right; /* יישור הטקסט לימין */
 }
 
 .review-item:hover {
@@ -38,17 +40,33 @@
     font-size: 18px;
     font-weight: bold;
     color: #f39c12;
+    font-family: 'Alef', sans-serif; /* הוספת גופן מתאים לעברית, אם תרצה */
+
 }
 
 .review-comment {
+    font-family: 'Alef', sans-serif; /* הוספת גופן מתאים לעברית, אם תרצה */
+    background-color: #2b3a4d; /* צבע רקע כהה יותר */
     font-size: 16px;
     color: #ffffff;
     margin-top: 5px;
+    padding: 10px;
+    border-radius: 8px;
 }
 
 .review-timestamp {
-    font-size: 14px;
+    position: absolute;
+    top: 13px;
+    left: 10px;
+    font-size: 15px;
     color: #ffffff;
-    margin-top: 10px;
-    text-align: right;
+    direction: ltr; /* לשמירה על פורמט התאריך והשעה */
+}
+.review-item img {
+    width: 100%; /* התאמה לגודל הרכיב */
+    max-width: 330px; /* הגבלת רוחב מירבי */
+    height: auto; /* שמירת יחס הגובה-רוחב */
+    border-radius: 8px; /* פינות מעוגלות */
+    margin-top: 5px; /* ריווח מעל התמונה */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* צל קל לתמונה */
 }

@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { savePlacesToDatabase } = require('../controller/spot'); // Ensure the path is correct
-const { addReview } = require('../controller/spot'); // Ensure the path is correct
+const { savePlacesToDatabase, addReview } = require('../controller/spot'); // Ensure the path is correct
 const Spot = require('../models/spot'); // Ensure the path is correct for your model
 const Review = require('../models/review'); // Import your Review model
 const mongoose = require('mongoose');
 
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' }); // תיקייה זמנית לשמירת התמונות
 
 // Route to save places to the database
 router.post('/save-places', async (req, res) => {
@@ -21,24 +22,8 @@ router.post('/save-places', async (req, res) => {
 
 
 // POST route to add a review
-router.post('/add-review', async (req, res) => {
-  try {
-    const review = req.body.review;
-    const savedReview = await addReview(review);
-    const id = req.body.id;
-    if (mongoose.Types.ObjectId.isValid(id)) {
-      await Spot.findByIdAndUpdate(id, { $push: { reviews: savedReview } });
-    } else {
-      throw new Error('Invalid ObjectId format');
-    }
+router.post('/add-review', upload.single('image'), addReview);
 
-
-    res.status(201).json(savedReview);
-  } catch (error) {
-    console.error('Error adding review:', error);
-    res.status(500).json({ message: 'Error adding review' });
-  }
-});
 
 // Route to get all places from the database
 router.get('/get-places', async (req, res) => {

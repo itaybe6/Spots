@@ -118,57 +118,64 @@ const Map = () => {
 
   const getIconUrl = (placeType, rating, isHovered) => {
     const hoverIcons = {
-        restaurant: Restaurant,
-        bar: Bar,
-        spa: Spa,
-        cafe: Coffee,
-        night_club: Party,
+      restaurant: Restaurant,
+      bar: Bar,
+      spa: Spa,
+      cafe: Coffee,
+      night_club: Party,
     };
 
     const greenIcons = {
-        restaurant: restaurant_green,
-        bar: bar_green,
-        spa: spa_green,
-        cafe: coffee_green,
-        night_club: party_green,
+      restaurant: restaurant_green,
+      bar: bar_green,
+      spa: spa_green,
+      cafe: coffee_green,
+      night_club: party_green,
     };
 
     const redIcons = {
-        restaurant: restaurant_red,
-        bar: bar_red,
-        spa: spa_red,
-        cafe: coffee_red,
-        night_club: party_red,
+      restaurant: restaurant_red,
+      bar: bar_red,
+      spa: spa_red,
+      cafe: coffee_red,
+      night_club: party_red,
     };
 
     const yellowIcons = {
-        restaurant: restaurant_yellow,
-        bar: bar_yellow,
-        spa: spa_yellow,
-        cafe: coffee_yellow,
-        night_club: party_yellow,
+      restaurant: restaurant_yellow,
+      bar: bar_yellow,
+      spa: spa_yellow,
+      cafe: coffee_yellow,
+      night_club: party_yellow,
     };
 
     if (isHovered) {
-        // החזרת אייקון הריחוף כאשר העכבר נמצא מעל המרקר
-        return hoverIcons[placeType] || hoverIcons['restaurant'];
+      // החזרת אייקון הריחוף כאשר העכבר נמצא מעל המרקר
+      return hoverIcons[placeType] || hoverIcons['restaurant'];
     }
 
     // בחירת אייקון לפי הדירוג כאשר העכבר לא נמצא מעל המרקר
     if (rating >= 4) return greenIcons[placeType] || restaurant_green;
     if (rating < 4 && rating >= 2.8) return yellowIcons[placeType] || restaurant_yellow;
     return redIcons[placeType] || restaurant_red;
-};
+  };
 
-  const handleReviewSubmit = async (id, review) => {
+  const handleReviewSubmit = async (id, formData) => {
+    formData.append('id', id);
+
     try {
-      const response = await axios.post('http://localhost:5001/api/add-review', { id, review });
+      const response = await axios.post(`http://localhost:5001/api/add-review`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       console.log('Review submitted successfully:', response.data);
+
+      // עדכן את הביקורות כפי שעשינו קודם
       if (selectedPlace) {
         const newReview = {
-          ...review,
-          _id: response.data._id,
-          timestamp: Date.now(),
+          ...response.data,
+          timestamp: Date.now()
         };
         const updatedReviews = [...(selectedPlace.reviews || []), newReview];
         setSelectedPlace(prev => ({ ...prev, reviews: updatedReviews }));
@@ -177,6 +184,7 @@ const Map = () => {
       console.error('Error submitting review:', error);
     }
   };
+
 
   // Fetch places from the database
   const fetchSavedPlaces = async () => {

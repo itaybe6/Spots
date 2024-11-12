@@ -9,6 +9,9 @@ const ReviewSchema = new mongoose.Schema({
   comment: {
     type: String,
     required: true
+  }, imageData: {
+    type: String, // נתיב לתמונה שנשמר בשרת
+    required: false,
   },
   timestamp: {
     type: Date,

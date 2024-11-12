@@ -2,6 +2,7 @@
 
 const Spot = require('../models/spot'); // Ensure this path is correct
 const Review = require('../models/review'); // Ensure this path is correct
+const fs = require('fs');
 
 
 // Function to save places to the database
@@ -11,7 +12,7 @@ const savePlacesToDatabase = async (places) => {
     for (const place of places) {
       const newSpot = new Spot({
         name: place.name,
-        adress : place.vicinity,
+        adress: place.vicinity,
         placeId: place.place_id,
         location: {
           lat: place.geometry.location.lat,
@@ -46,23 +47,34 @@ const getAllPlaces = async () => {
 };
 
 // Function to add a review
-const addReview = async (reviewData) => { // Changed parameter name for clarity
-  const savedReview = [];
-  const now = Date.now();
+const addReview = async (req, res) => {
   try {
-    // Create a new review
+    const { rating, comment, id } = req.body; // ה-id מועבר כחלק מהגוף של הבקשה
+    let imageData = null;
+
+    if (req.file) {
+      const imageBuffer = fs.readFileSync(req.file.path);
+      imageData = imageBuffer.toString('base64');
+      fs.unlinkSync(req.file.path);
+    }
+
     const newReview = new Review({
-      rating: reviewData.rating,
-      comment: reviewData.comment
+      rating,
+      comment,
+      timestamp: Date.now(),
+      imageData
     });
 
-    // Save the review
-    const savedNewReview = await newReview.save();
-    savedReview.push(savedNewReview);
-    return savedReview;
+    const savedReview = await newReview.save();
+
+    if (id) {
+      await Spot.findByIdAndUpdate(id, { $push: { reviews: savedReview } });
+    }
+
+    res.status(201).json(savedReview);
   } catch (error) {
-    console.error('Error saving Review:', error);
-    throw new Error('Failed to save review to database'); // Adjusted error message
+    console.error('Error adding review:', error);
+    res.status(500).json({ message: 'Error adding review' });
   }
 };
 

@@ -8,6 +8,7 @@ const app = express();
 // אפשרות ל-CORS
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 
 // URI של MongoDB Atlas
 const mongoURI = 'mongodb+srv://itay:Itay6236045@cluster0.n474g.mongodb.net/hotspots?retryWrites=true&w=majority&appName=Cluster0';
