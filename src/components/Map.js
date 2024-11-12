@@ -53,7 +53,9 @@ const Map = () => {
   const [places, setPlaces] = useState([]);
   const [placesget, setPlacesGet] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
-  const [selectedType, setSelectedType] = useState('bar'); // State to hold the selected type
+  const [selectedType, setSelectedType] = useState('all'); // State to hold the selected type
+  const [searchTerm, setSearchTerm] = useState(''); // State for the search term
+
 
 
   const containerStyle = {
@@ -222,6 +224,23 @@ const Map = () => {
     );
   });
 
+  const handleSearch = () => {
+    const place = placesget.find((place) =>
+      place.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  
+    if (place) {
+      setSelectedPlace(place);
+      setCurrentLocation({
+        lat: place.location.lat,
+        lng: place.location.lng,
+      });
+    } else {
+      alert('Place not found');
+    }
+  };
+  
+
   return (
     <div>
       <div style={{ margin: '10px 0' }}>
@@ -240,6 +259,17 @@ const Map = () => {
           <option value="spa">Spa</option>
           <option value="park">Park</option>
         </select>
+      </div>
+
+      <div style={{ marginBottom: '10px' }}>
+        <input
+          type="text"
+          placeholder="Search for a place"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ padding: '5px', fontSize: '16px', marginRight: '10px' }}
+        />
+        <button onClick={handleSearch} style={{ padding: '5px', fontSize: '16px' }}>Search</button>
       </div>
 
       <GoogleMap
