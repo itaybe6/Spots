@@ -214,7 +214,13 @@ const Map = () => {
   }, [isLoaded]);
 
   if (!isLoaded) return <div>Loading Google Maps...</div>
-
+  // Filter the places based on the selected type
+  const filteredPlaces = placesget.filter((place) => {
+    return (
+      selectedType === 'all' ||
+      (place.allTypes && place.allTypes.includes(selectedType))
+    );
+  });
 
   return (
     <div>
@@ -226,6 +232,7 @@ const Map = () => {
           onChange={(e) => setSelectedType(e.target.value)} // Update selected type on change
           style={{ padding: '5px', fontSize: '16px' }}
         >
+          <option value="all">All</option>
           <option value="bar">Bar</option>
           <option value="restaurant">Restaurant</option>
           <option value="cafe">Café</option>
@@ -239,11 +246,9 @@ const Map = () => {
         mapContainerStyle={containerStyle}
         center={currentLocation}
         zoom={14}
-        options={{
-          styles: mapOptions.mapTheme,
-        }}
+        options={{ styles: mapOptions.mapTheme }}
       >
-        {placesget.map((place) => {
+        {filteredPlaces.map((place) => {
           const placeId = place.place_id || place._id;
 
           return (place.geometry?.location || place.location) ? (
@@ -275,12 +280,13 @@ const Map = () => {
             onCloseClick={onCloseFunc}
             options={{ zIndex: 999 }}
           >
-            <PlaceInfo selectedPlace={selectedPlace} onReviewSubmit={handleReviewSubmit} />
+            <PlaceInfo selectedPlace={selectedPlace} />
           </InfoWindow>
         )}
       </GoogleMap>
     </div>
   );
 };
+
 
 export default Map;
