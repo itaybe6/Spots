@@ -1,0 +1,139 @@
+/* סגנון כללי לרכיב */
+.place-info-container {
+    text-align: left;
+    direction: ltr;
+    padding: 20px;
+    background-color: #2C3E50;
+    color: #FFFFFF; /* טקסט לבן */
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* כותרת - שם המסעדה */
+  .place-info-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FFFFFF;
+    background-color: #000000; /* רקע שחור לכותרת */
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    text-align: center;
+    transition: transform 0.7s ease; /* הגדרת מעבר */
+
+  }
+  .place-info-title:hover {    
+
+    transform: scale(1.1); /* הגדלת הכותרת ב-10% */
+  }
+  
+  /* כותרות משניות */
+  .place-info-details p {
+    margin: 10px 0;
+    font-size: 17px;
+  }
+  
+  .place-info-details {
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #1e2f3f;
+    transition: transform 0.7s ease; /* הגדרת מעבר */
+
+
+  }
+  
+  .place-info-details strong {
+    color: #FFFFFF; /* כותרות בלבן */
+    font-weight: bold;
+  }
+  
+  /* תמונה */
+  .place-info-photo {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* אזור הביקורות */
+  .review-section {
+    margin-top: 20px;
+  }
+  
+  /* כפתורים */
+  button {
+    background-color: #555555;
+    color: #FFFFFF;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #444444;
+    transform: scale(1.05);
+  }
+  
+  input[type="text"], textarea {
+    background-color: #333333;
+    color: #FFFFFF;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  input[type="text"]::placeholder,
+  textarea::placeholder {
+    color: #AAAAAA;
+  }
+  
+  select {
+    background-color: #333333;
+    color: #FFFFFF;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  .review-upload {
+    font-size: 14px;
+    color: #AAAAAA;
+  }
+  
+
+  .walking-time {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 16px;
+    margin-top: 10px;
+    color: #09ff00;
+    font-weight: bold;
+    transition: transform 0.5s ease; /* הוספת מעבר איטי */
+  }
+  
+  .walking-time:hover {
+    transform: scale(1.1);
+  }
+  
+  .walking-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    filter: drop-shadow(0 0 5px #09ff00;);
+    transition: transform 0.5s ease; /* הוספת מעבר איטי */
+  }
+  
+  .walking-icon:hover {
+    transform: scale(1.1);
+  }
+  

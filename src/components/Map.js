@@ -33,7 +33,7 @@ import party_red from '../assets/images/party_red.png';
 import party_yellow from '../assets/images/party_yellow.png';
 
 
-
+import user from '../assets/images/user.png'; // להוסיף למיקמו הנוכחי של המשתמש
 
 const Map = () => {
   const libraries = ['places'];
@@ -151,7 +151,7 @@ const Map = () => {
       night_club: party_yellow,
     };
 
-    if (isHovered) {
+    if (isHovered || rating === 0) {
       // החזרת אייקון הריחוף כאשר העכבר נמצא מעל המרקר
       return hoverIcons[placeType] || hoverIcons['restaurant'];
     }
@@ -187,6 +187,11 @@ const Map = () => {
     }
   };
 
+  const calculateAverageRating = (reviews) => {
+    if (!reviews || reviews.length === 0) return 0;
+    const total = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return total / reviews.length;
+  };
 
   // Fetch places from the database
   const fetchSavedPlaces = async () => {
@@ -210,7 +215,7 @@ const Map = () => {
       }
 
 
-     // fetchNearbyPlaces();
+      // fetchNearbyPlaces();
       fetchSavedPlaces();
 
     }
@@ -229,7 +234,7 @@ const Map = () => {
     const place = placesget.find((place) =>
       place.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  
+
     if (place) {
       setSelectedPlace(place);
       setCurrentLocation({
@@ -240,7 +245,7 @@ const Map = () => {
       alert('Place not found');
     }
   };
-  
+
 
   return (
     <div>
@@ -291,7 +296,7 @@ const Map = () => {
               }}
               options={{
                 icon: {
-                  url: getIconUrl(place.type, place.rating, hoveredMarkerId === placeId),
+                  url: getIconUrl(place.type, calculateAverageRating(place.reviews), hoveredMarkerId === placeId),
                   scaledSize: new window.google.maps.Size(20, 20),
                 },
               }}
@@ -302,6 +307,17 @@ const Map = () => {
           ) : null;
         })}
 
+        <Marker
+          position={currentLocation}
+          options={{
+            icon: {
+              url: user,
+            },
+          }}
+        />
+
+        <Marker position={currentLocation} /> 
+
         {selectedPlace && (
           <InfoWindow
             position={{
@@ -311,7 +327,7 @@ const Map = () => {
             onCloseClick={onCloseFunc}
             options={{ zIndex: 999 }}
           >
-            <PlaceInfo selectedPlace={selectedPlace} />
+            <PlaceInfo selectedPlace={selectedPlace} onReviewSubmit={handleReviewSubmit} currentLocation = {currentLocation} />
           </InfoWindow>
         )}
       </GoogleMap>
