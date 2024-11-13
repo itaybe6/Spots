@@ -12,7 +12,7 @@ const upload = multer({ dest: 'uploads/' }); // תיקייה זמנית לשמי
 router.post('/save-places', async (req, res) => {
   try {
     const places = req.body.places;
-    //console.log("Saving places:", JSON.stringify(req.body.places));
+
     const savedPlaces = await savePlacesToDatabase(places);
     res.status(200).json(savedPlaces);
   } catch (error) {

@@ -7,9 +7,16 @@ const fs = require('fs');
 
 // Function to save places to the database
 const savePlacesToDatabase = async (places) => {
+
   try {
     const savedPlaces = [];
     for (const place of places) {
+
+      const existingPlace = await Spot.findOne({ placeId: place.place_id });
+      if (existingPlace) {
+        console.log('Place already exists:', place.placeId);
+        continue
+      }
       const newSpot = new Spot({
         name: place.name,
         adress: place.vicinity,
@@ -85,3 +92,8 @@ module.exports = {
   getAllPlaces,
   addReview,
 };
+
+
+
+
+

@@ -99,7 +99,7 @@ const Map = () => {
 
       setPlaces(filteredPlaces);
       console.log("Filtered Places:", filteredPlaces);
-      // savePlaces(filteredPlaces);
+      savePlaces(filteredPlaces);
 
 
       localStorage.setItem("lastFetchTime", Date.now());
@@ -194,7 +194,6 @@ const Map = () => {
       const response = await axios.get('http://localhost:5001/api/get-places');
       // Optionally, update the `places` state with data from the database if desired
       setPlacesGet(response.data.data);
-      // console.log("dolev database "+ JSON.stringify(placesget));
     } catch (error) {
       console.error('Error fetching places from database:', error);
     }
@@ -210,6 +209,8 @@ const Map = () => {
         fetchNearbyPlaces();
       }
 
+
+     // fetchNearbyPlaces();
       fetchSavedPlaces();
 
     }
