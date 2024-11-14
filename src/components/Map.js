@@ -45,11 +45,11 @@ const Map = () => {
   const [hoveredMarkerId, setHoveredMarkerId] = useState(null);
 
   const telAvivCenter = {
-    lat: 32.0853,
-    lng: 34.7818,
+    lat: 31.5,
+    lng: 34.75,
   };
 
-  const [currentLocation, setCurrentLocation] = useState(telAvivCenter);
+  const [currentLocation, setCurrentLocation] = useState(null);
   const [places, setPlaces] = useState([]);
   const [placesget, setPlacesGet] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
@@ -71,40 +71,45 @@ const Map = () => {
 
   }
 
-  const fetchNearbyPlaces = async () => {
+  const fetchNearbyPlaces = async (pageToken = null) => {
     try {
-      const response = await axios.get('http://localhost:8010/proxy/maps/api/place/nearbysearch/json', {
-        params: {
-          location: `${currentLocation.lat},${currentLocation.lng}`,
-          radius: 5000,
-          type: 'restaurant|bar|cafe|night_club|spa|park',
-          key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-        },
-      });
+      const params = {
+        location: `${currentLocation.lat},${currentLocation.lng}`,
+        radius: 3000,
+        type: 'restaurant|bar|cafe|night_club|spa|park',
+        key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+      };
 
-      const filteredPlaces = response.data.results
-        .filter((place) =>
-          place.types && // Check if place.types exists
-          ['restaurant', 'bar', 'cafe', 'night_club', 'spa', 'park'].some((type) =>
-            place.types.includes(type)
-          )
-        )
-        .map(place => ({
-          ...place,
-          types: place.types ? place.types.filter(type => type !== 'establishment' && type !== 'point_of_interest') : [],
-          photoUrl: place.photos && place.photos[0]
-            ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
-            : null
-        }));
+      if (pageToken) {
+        params.pagetoken = pageToken;  // משתמשים ב-next_page_token אם קיים
+      }
 
-      setPlaces(filteredPlaces);
-      console.log("Filtered Places:", filteredPlaces);
-      savePlaces(filteredPlaces);
+      const response = await axios.get('http://localhost:8010/proxy/maps/api/place/nearbysearch/json', { params });
 
+      const fetchedPlaces = response.data.results.map(place => ({
+        ...place,
+        types: place.types ? place.types.filter(type => type !== 'establishment' && type !== 'point_of_interest') : [],
+        photoUrl: place.photos && place.photos[0]
+          ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
+          : null
+      }));
 
-      localStorage.setItem("lastFetchTime", Date.now());
+      setPlaces((prevPlaces) => [...prevPlaces, ...fetchedPlaces]); // מוסיפים את התוצאות לרשימה
+
+      // בודקים אם יש דף נוסף של תוצאות
+      if (response.data.next_page_token) {
+        // מחכים כדי לאפשר ל-next page token להתעדכן
+        setTimeout(() => {
+          fetchNearbyPlaces(response.data.next_page_token); // קריאה נוספת עם ה-token החדש
+        }, 2000); // מחכים 2 שניות לפי דרישת גוגל
+      } else {
+        console.log("כל המקומות נשלפו.");
+      }
+
+      savePlaces(fetchedPlaces); // שומרים את המקומות שנשלפו
+
     } catch (error) {
-      console.error('Error fetching places:', error);
+      console.error('שגיאה בשליפת המקומות:', error);
     }
   };
 
@@ -215,8 +220,21 @@ const Map = () => {
       }
 
 
-      // fetchNearbyPlaces();
+      //fetchNearbyPlaces();
       fetchSavedPlaces();
+      // קבלת המיקום הנוכחי של המשתמש
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            setCurrentLocation({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            });
+          },
+          (error) => console.error("שגיאה בקבלת מיקום המשתמש:", error)
+        );
+      }
+
 
     }
   }, [isLoaded]);
@@ -237,10 +255,10 @@ const Map = () => {
 
     if (place) {
       setSelectedPlace(place);
-      setCurrentLocation({
-        lat: place.location.lat,
-        lng: place.location.lng,
-      });
+      // setCurrentLocation({
+      //   lat: place.location.lat,
+      //   lng: place.location.lng,
+      // });
     } else {
       alert('Place not found');
     }
@@ -250,8 +268,19 @@ const Map = () => {
   return (
     <div>
       <div style={{ margin: '10px 0' }}>
-        <label htmlFor="placeType" style={{ marginRight: '10px' }}>Select Place Type:</label>
-        <select
+        <label
+          htmlFor="placeType"
+          style={{
+            marginRight: '10px',
+            padding: '5px',
+            fontSize: '16px',
+            border: '1px solid gray',
+            borderRadius: '5px',
+            backgroundColor: 'gray'
+          }}
+        >
+          Select Place Type:
+        </label>        <select
           id="placeType"
           value={selectedType}
           onChange={(e) => setSelectedType(e.target.value)} // Update selected type on change
@@ -273,7 +302,7 @@ const Map = () => {
           placeholder="Search for a place"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ padding: '5px', fontSize: '16px', marginRight: '10px' }}
+          style={{ padding: '5px', fontSize: '16px', marginRight: '10px', width: 150 }}
         />
         <button onClick={handleSearch} style={{ padding: '5px', fontSize: '16px' }}>Search</button>
       </div>
@@ -307,17 +336,23 @@ const Map = () => {
           ) : null;
         })}
 
-        <Marker
-          position={currentLocation}
-          options={{
-            icon: {
-              url: user,
-            },
-          }}
-        />
-
-        <Marker position={currentLocation} /> 
-
+        {/* Use default Google Maps icon for current location */}
+        {/* סימון המיקום הנוכחי */}
+        {currentLocation && (
+          <Marker
+            position={currentLocation}
+            options={{
+              icon: {
+                path: window.google.maps.SymbolPath.CIRCLE,
+                scale: 8,
+                fillColor: "red",
+                fillOpacity: 1,
+                strokeWeight: 2,
+                strokeColor: "white",
+              },
+            }}
+          />
+        )}
         {selectedPlace && (
           <InfoWindow
             position={{
@@ -327,10 +362,11 @@ const Map = () => {
             onCloseClick={onCloseFunc}
             options={{ zIndex: 999 }}
           >
-            <PlaceInfo selectedPlace={selectedPlace} onReviewSubmit={handleReviewSubmit} currentLocation = {currentLocation} />
+            <PlaceInfo selectedPlace={selectedPlace} onReviewSubmit={handleReviewSubmit} currentLocation={currentLocation} />
           </InfoWindow>
         )}
       </GoogleMap>
+
     </div>
   );
 };
