@@ -3,6 +3,8 @@ import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from '@react-google-map
 import { mapOptions } from './MapConfiguration';
 import axios from 'axios';
 import PlaceInfo from './PlaceInfo';
+import RadiusFilter from './RadiusFilter'; 
+
 
 import Restaurant from '../assets/images/Restaurant.png';
 import Spa from '../assets/images/Spa.png';
@@ -33,7 +35,6 @@ import party_red from '../assets/images/party_red.png';
 import party_yellow from '../assets/images/party_yellow.png';
 
 
-import user from '../assets/images/user.png'; // להוסיף למיקמו הנוכחי של המשתמש
 
 const Map = () => {
   const libraries = ['places'];
@@ -204,6 +205,7 @@ const Map = () => {
       const response = await axios.get('http://localhost:5001/api/get-places');
       // Optionally, update the `places` state with data from the database if desired
       setPlacesGet(response.data.data);
+      setPlaces(response.data.data); // to save all thge places without filter
     } catch (error) {
       console.error('Error fetching places from database:', error);
     }
@@ -306,6 +308,11 @@ const Map = () => {
         />
         <button onClick={handleSearch} style={{ padding: '5px', fontSize: '16px' }}>Search</button>
       </div>
+      <RadiusFilter
+        currentLocation={currentLocation}
+        places={places}
+        setFilteredPlaces={setPlacesGet}
+      />
 
       <GoogleMap
         mapContainerStyle={containerStyle}
