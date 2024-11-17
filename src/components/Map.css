@@ -37,3 +37,11 @@
   .top-rated-wrapper::-webkit-scrollbar {
     width: 0; /* הסתרת פס הגלילה ב-Chrome, Safari */
   }
+
+
+  .marker-icon {
+    transition: transform 0.3s ease-in-out; /* אפקט חלק */
+  }
+  .marker-icon-hover {
+    transform: scale(1.5); /* הגדלה בזמן hover */
+  }

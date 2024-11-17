@@ -330,7 +330,7 @@ const Map = () => {
         >
           {filteredPlaces.map((place) => {
             const placeId = place.place_id || place._id;
-
+            const isHovered = hoveredMarkerId === placeId
             return (place.geometry?.location || place.location) ? (
               <Marker
                 key={placeId}
@@ -341,12 +341,13 @@ const Map = () => {
                 options={{
                   icon: {
                     url: getIconUrl(place.type, calculateAverageRating(place.reviews), hoveredMarkerId === placeId),
-                    scaledSize: new window.google.maps.Size(20, 20),
+                    scaledSize: new window.google.maps.Size(isHovered ? 30: 20 , isHovered ? 30: 20),
                   },
                 }}
                 onMouseOver={() => setHoveredMarkerId(placeId)}
                 onMouseOut={() => setHoveredMarkerId(null)}
                 onClick={() => setSelectedPlace(place)}
+                
               />
             ) : null;
           })}
