@@ -9,3 +9,31 @@
     /* background: rgb(200, 255, 0); */
     background: rgb(233, 233,233, 0.5);
   }
+
+
+  .map-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+  }
+  
+  /* מיקום רכיב המקומות המומלצים */
+  .top-rated-wrapper {
+    position: absolute;
+    top: 200px;
+    right: 250px;
+    z-index: 999;
+    width: 400px;
+    background-color: #ffffff00;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    overflow-y: auto;
+    max-height: 50vh;
+    
+
+  }
+  
+  .top-rated-wrapper::-webkit-scrollbar {
+    width: 0; /* הסתרת פס הגלילה ב-Chrome, Safari */
+  }

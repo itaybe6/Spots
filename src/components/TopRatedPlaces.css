@@ -1,0 +1,76 @@
+/* מיכל הרכיב הראשי */
+.top-rated-container {
+    background-color: #1e2f3f8f; /* צבע רקע בהיר */
+    border-radius: 15px; /* בורדר רדיוס */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* צל */
+    padding: 20px;
+    max-width: 600px;
+    margin: 20px auto;
+    text-align: center;
+  }
+  
+  /* כותרת */
+  .top-rated-title {
+    font-size: 24px;
+    color: #ffffff;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+  
+  /* רשימת המקומות */
+  .places-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* כרטיס לכל מקום */
+  .place-card {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+  
+  /* אפקט הובר לכרטיס */
+  .place-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* תמונת המקום */
+  .place-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-right: 15px;
+  }
+  
+  /* פרטי המקום */
+  .place-details {
+    text-align: left;
+  }
+  
+  .place-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 0 5px;
+  }
+  
+  .place-type {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+  }
+  
+  .place-rating {
+    font-size: 14px;
+    color: #28a745; /* צבע ירוק לדירוג */
+    font-weight: bold;
+  }
+  

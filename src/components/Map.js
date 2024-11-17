@@ -3,8 +3,9 @@ import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from '@react-google-map
 import { mapOptions } from './MapConfiguration';
 import axios from 'axios';
 import PlaceInfo from './PlaceInfo';
-import RadiusFilter from './RadiusFilter'; 
-
+import RadiusFilter from './RadiusFilter';
+import TopRatedPlaces from './TopRatedPlaces';
+import './Map.css'
 
 import Restaurant from '../assets/images/Restaurant.png';
 import Spa from '../assets/images/Spa.png';
@@ -268,7 +269,7 @@ const Map = () => {
 
 
   return (
-    <div>
+    <div className="map-page" >
       <div style={{ margin: '10px 0' }}>
         <label
           htmlFor="placeType"
@@ -308,71 +309,79 @@ const Map = () => {
         />
         <button onClick={handleSearch} style={{ padding: '5px', fontSize: '16px' }}>Search</button>
       </div>
+
       <RadiusFilter
         currentLocation={currentLocation}
         places={places}
         setFilteredPlaces={setPlacesGet}
       />
 
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={currentLocation}
-        zoom={15}
-        options={{ styles: mapOptions.mapTheme }}
-      >
-        {filteredPlaces.map((place) => {
-          const placeId = place.place_id || place._id;
+          
+      <div className="top-rated-wrapper">
+        <TopRatedPlaces places={placesget} setSelectedPlace={setSelectedPlace} currentLocation ={currentLocation}/>
+      </div>
 
-          return (place.geometry?.location || place.location) ? (
+      <div className="map-wrapper">
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={currentLocation}
+          zoom={15}
+          options={{ styles: mapOptions.mapTheme }}
+        >
+          {filteredPlaces.map((place) => {
+            const placeId = place.place_id || place._id;
+
+            return (place.geometry?.location || place.location) ? (
+              <Marker
+                key={placeId}
+                position={{
+                  lat: place.geometry?.location?.lat || place.location?.lat,
+                  lng: place.geometry?.location?.lng || place.location?.lng,
+                }}
+                options={{
+                  icon: {
+                    url: getIconUrl(place.type, calculateAverageRating(place.reviews), hoveredMarkerId === placeId),
+                    scaledSize: new window.google.maps.Size(20, 20),
+                  },
+                }}
+                onMouseOver={() => setHoveredMarkerId(placeId)}
+                onMouseOut={() => setHoveredMarkerId(null)}
+                onClick={() => setSelectedPlace(place)}
+              />
+            ) : null;
+          })}
+
+          {/* Use default Google Maps icon for current location */}
+          {/* סימון המיקום הנוכחי */}
+          {currentLocation && (
             <Marker
-              key={placeId}
-              position={{
-                lat: place.geometry?.location?.lat || place.location?.lat,
-                lng: place.geometry?.location?.lng || place.location?.lng,
-              }}
+              position={currentLocation}
               options={{
                 icon: {
-                  url: getIconUrl(place.type, calculateAverageRating(place.reviews), hoveredMarkerId === placeId),
-                  scaledSize: new window.google.maps.Size(20, 20),
+                  path: window.google.maps.SymbolPath.CIRCLE,
+                  scale: 8,
+                  fillColor: "red",
+                  fillOpacity: 1,
+                  strokeWeight: 2,
+                  strokeColor: "white",
                 },
               }}
-              onMouseOver={() => setHoveredMarkerId(placeId)}
-              onMouseOut={() => setHoveredMarkerId(null)}
-              onClick={() => setSelectedPlace(place)}
             />
-          ) : null;
-        })}
-
-        {/* Use default Google Maps icon for current location */}
-        {/* סימון המיקום הנוכחי */}
-        {currentLocation && (
-          <Marker
-            position={currentLocation}
-            options={{
-              icon: {
-                path: window.google.maps.SymbolPath.CIRCLE,
-                scale: 8,
-                fillColor: "red",
-                fillOpacity: 1,
-                strokeWeight: 2,
-                strokeColor: "white",
-              },
-            }}
-          />
-        )}
-        {selectedPlace && (
-          <InfoWindow
-            position={{
-              lat: selectedPlace.geometry?.location?.lat || selectedPlace.location?.lat,
-              lng: selectedPlace.geometry?.location?.lng || selectedPlace.location?.lng,
-            }}
-            onCloseClick={onCloseFunc}
-            options={{ zIndex: 999 }}
-          >
-            <PlaceInfo selectedPlace={selectedPlace} onReviewSubmit={handleReviewSubmit} currentLocation={currentLocation} />
-          </InfoWindow>
-        )}
-      </GoogleMap>
+          )}
+          {selectedPlace && (
+            <InfoWindow
+              position={{
+                lat: selectedPlace.geometry?.location?.lat || selectedPlace.location?.lat,
+                lng: selectedPlace.geometry?.location?.lng || selectedPlace.location?.lng,
+              }}
+              onCloseClick={onCloseFunc}
+              options={{ zIndex: 999 }}
+            >
+              <PlaceInfo selectedPlace={selectedPlace} onReviewSubmit={handleReviewSubmit} currentLocation={currentLocation} />
+            </InfoWindow>
+          )}
+        </GoogleMap>
+      </div>
 
     </div>
   );
