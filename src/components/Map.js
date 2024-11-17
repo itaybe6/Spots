@@ -215,7 +215,7 @@ const Map = () => {
       }
 
 
-      // fetchNearbyPlaces();
+      //fetchNearbyPlaces();
       fetchSavedPlaces();
 
     }
@@ -281,7 +281,7 @@ const Map = () => {
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={currentLocation}
-        zoom={14}
+        zoom={15}
         options={{ styles: mapOptions.mapTheme }}
       >
         {filteredPlaces.map((place) => {

@@ -33,6 +33,10 @@ const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation }) => {
         location.lat,
         location.lng
     );
+    const handleWalkingClick = () => {
+        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${currentLocation.lat},${currentLocation.lng}&destination=${location.lat},${location.lng}&travelmode=walking`;
+        window.open(googleMapsUrl, '_blank');
+      };
 
     return (
         <div className="place-info-container">
@@ -42,7 +46,7 @@ const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation }) => {
                 <p><strong>All Types:</strong> {allTypes.join(', ')}</p>
                 <p><strong>Rating:</strong> {rating}</p>
                 <p><strong>Distance from current location:</strong> {distance.toFixed(2)} km</p>
-                <div className="walking-time">
+                <div className="walking-time" onClick={handleWalkingClick} >
                     <img src="https://img.icons8.com/ios-filled/50/000000/walking.png" alt="walking icon" className="walking-icon" />
                     <span>Estimated walking time: {calculateWalkingTime(distance)} minutes</span>
                 </div>
