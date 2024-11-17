@@ -48,56 +48,64 @@ const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation }) => {
     return (
         <div className="place-info-container">
             <h2 className="place-info-title">{name}</h2>
-            <div className="place-info-details">
-                <p><strong>Primary Type:</strong> {type}</p>
-                <p><strong>Rating:</strong> {rating}</p>
-                {placeDetails && (
-                <div className="additional-details">
-                    <p><strong>Phone:</strong> {placeDetails.formatted_phone_number || 'Not Available'}</p>
-                    {placeDetails.opening_hours ? (
-                        <>
-                            <button 
-                                onClick={toggleOpeningHours} 
-                                style={{
-                                    margin: '8px 0',
-                                    padding: '8px 16px',
-                                    backgroundColor: 'black',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                {showOpeningHours ? 'Hide Opening Hours' : 'Show Opening Hours'}
-                            </button>
-                            {showOpeningHours && (
-                                <ul>
-                                    {placeDetails.opening_hours.weekday_text.map((day, index) => (
-                                        <li key={index}>{day}</li>
-                                    ))}
-                                </ul>
-                            )}
-                        </>
-                    ) : (
-                        <p>Not Available</p>
+            {placeDetails &&
+                <div className="right-buttons-container">
+                    {placeDetails.formatted_phone_number && (
+                        <a
+                            href={`tel:${placeDetails.formatted_phone_number}`}
+                            className="phone-button"
+                        >
+                            {placeDetails.formatted_phone_number}
+                        </a>
                     )}
                     {placeDetails.website && (
-                        <p>
-                            <strong>Website:</strong>{' '}
-                            <a href={placeDetails.website} target="_blank" rel="noopener noreferrer">
-                                {placeDetails.website}
-                            </a>
-                        </p>
+                        <a
+                            href={placeDetails.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="website-button"
+                        >
+                            Website
+                        </a>
                     )}
                 </div>
-                )}
+            }
+
+            <div className="lef-details">
+                <p><strong>Primary Type:</strong> {type}</p>
+                <p><strong>Rating:</strong> {rating}</p>
                 <p><strong>Distance from current location:</strong> {distance.toFixed(2)} km</p>
-                <div className="walking-time" onClick={handleWalkingClick}>
+
+                {placeDetails && (
+                    <div className="additional-details">
+                        {placeDetails.opening_hours ? (
+                            <>
+                                <button onClick={toggleOpeningHours} className="custom-button">
+                                    {showOpeningHours ? 'Hide Opening Hours' : 'Show Opening Hours'}
+                                </button>
+                                {showOpeningHours && (
+                                    <ul>
+                                        {placeDetails.opening_hours.weekday_text.map((day, index) => (
+                                            <li key={index}>{day}</li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </>
+                        ) : (
+                            <p>Not Available</p>
+                        )}
+                    </div>
+                )}
+                <div className="custom-button" onClick={handleWalkingClick}>
                     <img src="https://img.icons8.com/ios-filled/50/000000/walking.png" alt="walking icon" className="walking-icon" />
                     <span>Estimated walking time: {calculateWalkingTime(distance)} minutes</span>
                 </div>
-                {photo && <img src={photo} alt={name} className="place-info-photo" />}
             </div>
+            {photo && <img src={photo} alt={name} className="place-info-photo" />}
+
+
+
+
             <div className="review-section">
                 <AddReview onReviewSubmit={onReviewSubmit} _id={_id} />
                 <ReviewsList reviews={reviews} />
