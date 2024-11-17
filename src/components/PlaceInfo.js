@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import AddReview from './AddReview';
 import ReviewsList from './ReviewsList';
 import './PlaceInfo.css';
+import FetchPlaceDetails from './FetchPlaceDetails';
 
 const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation }) => {
-    const { name, allTypes, type, rating, photo, reviews, _id, location } = selectedPlace;
+    const { name, allTypes, type, rating, photo, reviews, _id, location, placeId } = selectedPlace;
 
-    // פונקציה לחישוב המרחק בקילומטרים בין מיקום המשתמש למקום
+    const [placeDetails, setPlaceDetails] = useState(null); // שמירת נתוני המקום
+    const [showOpeningHours, setShowOpeningHours] = useState(false); // ניהול תצוגת שעות הפעילות
+
     const calculateDistance = (lat1, lng1, lat2, lng2) => {
         const toRad = (value) => (value * Math.PI) / 180;
         const R = 6371; // רדיוס כדור הארץ בקילומטרים
@@ -20,7 +23,6 @@ const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation }) => {
         return R * c;
     };
 
-    // חישוב זמן ההליכה בדקות לפי המרחק
     const calculateWalkingTime = (distanceKm) => {
         const walkingSpeedKmPerMin = 5 / 60; // מהירות הליכה ממוצעת בקמ"ש מחולקת ל-60 כדי לקבל ק"מ לדקה
         const walkingTimeInMinutes = distanceKm / walkingSpeedKmPerMin;
@@ -33,29 +35,74 @@ const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation }) => {
         location.lat,
         location.lng
     );
+
     const handleWalkingClick = () => {
         const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${currentLocation.lat},${currentLocation.lng}&destination=${location.lat},${location.lng}&travelmode=walking`;
         window.open(googleMapsUrl, '_blank');
-      };
+    };
+
+    const toggleOpeningHours = () => {
+        setShowOpeningHours(!showOpeningHours); // לשנות את המצב של שעות הפעילות
+    };
 
     return (
         <div className="place-info-container">
             <h2 className="place-info-title">{name}</h2>
             <div className="place-info-details">
                 <p><strong>Primary Type:</strong> {type}</p>
-                <p><strong>All Types:</strong> {allTypes.join(', ')}</p>
                 <p><strong>Rating:</strong> {rating}</p>
+                {placeDetails && (
+                <div className="additional-details">
+                    <p><strong>Phone:</strong> {placeDetails.formatted_phone_number || 'Not Available'}</p>
+                    {placeDetails.opening_hours ? (
+                        <>
+                            <button 
+                                onClick={toggleOpeningHours} 
+                                style={{
+                                    margin: '8px 0',
+                                    padding: '8px 16px',
+                                    backgroundColor: 'black',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                {showOpeningHours ? 'Hide Opening Hours' : 'Show Opening Hours'}
+                            </button>
+                            {showOpeningHours && (
+                                <ul>
+                                    {placeDetails.opening_hours.weekday_text.map((day, index) => (
+                                        <li key={index}>{day}</li>
+                                    ))}
+                                </ul>
+                            )}
+                        </>
+                    ) : (
+                        <p>Not Available</p>
+                    )}
+                    {placeDetails.website && (
+                        <p>
+                            <strong>Website:</strong>{' '}
+                            <a href={placeDetails.website} target="_blank" rel="noopener noreferrer">
+                                {placeDetails.website}
+                            </a>
+                        </p>
+                    )}
+                </div>
+                )}
                 <p><strong>Distance from current location:</strong> {distance.toFixed(2)} km</p>
-                <div className="walking-time" onClick={handleWalkingClick} >
+                <div className="walking-time" onClick={handleWalkingClick}>
                     <img src="https://img.icons8.com/ios-filled/50/000000/walking.png" alt="walking icon" className="walking-icon" />
                     <span>Estimated walking time: {calculateWalkingTime(distance)} minutes</span>
                 </div>
+                {photo && <img src={photo} alt={name} className="place-info-photo" />}
             </div>
-            {photo && <img src={photo} alt={name} className="place-info-photo" />}
             <div className="review-section">
                 <AddReview onReviewSubmit={onReviewSubmit} _id={_id} />
                 <ReviewsList reviews={reviews} />
             </div>
+            <FetchPlaceDetails placeId={placeId} handleDetails={(details) => setPlaceDetails(details)} />
         </div>
     );
 };
