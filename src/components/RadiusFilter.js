@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import Fetch from './Fetch';
 
-const RadiusFilter = ({ currentLocation, places, setFilteredPlaces }) => {
+const RadiusFilter = ({ currentLocation, setFilteredPlaces }) => {
   const [selectedRadius, setSelectedRadius] = useState('all');
+
+  const [places, setPlaces] = useState([]);
+
 
   // חישוב מרחק בין שני מיקומים
   const calculateDistance = (lat1, lng1, lat2, lng2) => {
@@ -11,9 +15,9 @@ const RadiusFilter = ({ currentLocation, places, setFilteredPlaces }) => {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos((lat1 * Math.PI) / 180) *
-        Math.cos((lat2 * Math.PI) / 180) *
-        Math.sin(dLng / 2) *
-        Math.sin(dLng / 2);
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c; // מרחק בק"מ
   };
@@ -39,9 +43,11 @@ const RadiusFilter = ({ currentLocation, places, setFilteredPlaces }) => {
       setFilteredPlaces(filtered); // עדכון המקומות המסוננים
     }
   };
-
   return (
     <div style={{ marginBottom: '10px' }}>
+
+      <Fetch setPlaces={setPlaces} currentLocation={currentLocation} />
+
       <label style={{ color: 'black' }} htmlFor="radius">Filter by Radius:</label>
       <select
         id="radius"

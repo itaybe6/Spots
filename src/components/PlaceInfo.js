@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AddReview from './AddReview';
 import ReviewsList from './ReviewsList';
-import './PlaceInfo.css';
+import '../style/PlaceInfo.css';
 import FetchPlaceDetails from './FetchPlaceDetails';
 
 const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation }) => {

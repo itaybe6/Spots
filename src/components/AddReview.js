@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './AddReview.css';
+import '../style/AddReview.css';
 
 const AddReview = ({ onReviewSubmit, _id }) => {
     const [review, setReview] = useState({ rating: '', comment: '' });

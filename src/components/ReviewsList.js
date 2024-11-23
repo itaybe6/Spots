@@ -1,5 +1,5 @@
 import React from 'react';
-import './ReviewsList.css';
+import '../style/ReviewsList.css';
 
 const getRatingColor = (rating) => {
     switch (rating) {

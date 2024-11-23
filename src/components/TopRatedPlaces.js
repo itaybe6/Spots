@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import './TopRatedPlaces.css';
+import '../style/TopRatedPlaces.css';
 
 // add window of the top rated location near by 5 km to the current location
 const TopRatedPlaces = ({ places,setSelectedPlace ,currentLocation }) => {
