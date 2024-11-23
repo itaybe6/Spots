@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { mapOptions } from './MapConfiguration';
 import axios from 'axios';
 import PlaceInfo from './PlaceInfo';
 import RadiusFilter from './RadiusFilter';
 import TopRatedPlaces from './TopRatedPlaces';
-import './Map.css'
+import SwitchButton from './SwitchButton';
+
+import MapControls from './MapControls';
+import '../style/Map.css'
 
 import Restaurant from '../assets/images/Restaurant.png';
 import Spa from '../assets/images/Spa.png';
@@ -37,34 +40,20 @@ import party_yellow from '../assets/images/party_yellow.png';
 
 
 
-const Map = () => {
-  const libraries = ['places'];
+const Map = ({ currentLocation, places, setPlaces }) => {
 
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries: libraries,
-  });
+
   const [hoveredMarkerId, setHoveredMarkerId] = useState(null);
-
-  const telAvivCenter = {
-    lat: 31.5,
-    lng: 34.75,
-  };
-
-  const [currentLocation, setCurrentLocation] = useState(null);
-  const [places, setPlaces] = useState([]);
-  const [placesget, setPlacesGet] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [selectedType, setSelectedType] = useState('all'); // State to hold the selected type
   const [searchTerm, setSearchTerm] = useState(''); // State for the search term
 
-
-
+  
+ 
   const containerStyle = {
     width: '90vw',
     height: '90vh',
   };
-
 
   const onCloseFunc = () => {
     setSelectedPlace("")
@@ -73,58 +62,8 @@ const Map = () => {
 
   }
 
-  const fetchNearbyPlaces = async (pageToken = null) => {
-    try {
-      const params = {
-        location: `${currentLocation.lat},${currentLocation.lng}`,
-        radius: 3000,
-        type: 'restaurant|bar|cafe|night_club|spa|park',
-        key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-      };
 
-      if (pageToken) {
-        params.pagetoken = pageToken;  // משתמשים ב-next_page_token אם קיים
-      }
-
-      const response = await axios.get('http://localhost:8010/proxy/maps/api/place/nearbysearch/json', { params });
-
-      const fetchedPlaces = response.data.results.map(place => ({
-        ...place,
-        types: place.types ? place.types.filter(type => type !== 'establishment' && type !== 'point_of_interest') : [],
-        photoUrl: place.photos && place.photos[0]
-          ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
-          : null
-      }));
-
-      setPlaces((prevPlaces) => [...prevPlaces, ...fetchedPlaces]); // מוסיפים את התוצאות לרשימה
-
-      // בודקים אם יש דף נוסף של תוצאות
-      if (response.data.next_page_token) {
-        // מחכים כדי לאפשר ל-next page token להתעדכן
-        setTimeout(() => {
-          fetchNearbyPlaces(response.data.next_page_token); // קריאה נוספת עם ה-token החדש
-        }, 2000); // מחכים 2 שניות לפי דרישת גוגל
-      } else {
-        console.log("כל המקומות נשלפו.");
-      }
-
-      savePlaces(fetchedPlaces); // שומרים את המקומות שנשלפו
-
-    } catch (error) {
-      console.error('שגיאה בשליפת המקומות:', error);
-    }
-  };
-
-  const savePlaces = async (placesToSave) => {
-    try {
-      console.log('Places to be saved:', placesToSave);
-      const response = await axios.post('http://localhost:5001/api/save-places', { places: placesToSave });
-      console.log('Places saved successfully:', response.data);
-    } catch (error) {
-      console.error('Error saving places:', error);
-    }
-  };
-
+  
   const getIconUrl = (placeType, rating, isHovered) => {
     const hoverIcons = {
       restaurant: Restaurant,
@@ -200,51 +139,11 @@ const Map = () => {
     return total / reviews.length;
   };
 
-  // Fetch places from the database
-  const fetchSavedPlaces = async () => {
-    try {
-      const response = await axios.get('http://localhost:5001/api/get-places');
-      // Optionally, update the `places` state with data from the database if desired
-      setPlacesGet(response.data.data);
-      setPlaces(response.data.data); // to save all thge places without filter
-    } catch (error) {
-      console.error('Error fetching places from database:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (isLoaded) {
-      const lastFetchTime = localStorage.getItem("lastFetchTime");
-      const now = Date.now();
-      const dayInMs = 24 * 60 * 60 * 1000;
-      // Check if 24 hours have passed
-      if (!lastFetchTime || now - lastFetchTime > dayInMs) {
-        fetchNearbyPlaces();
-      }
 
 
-      //fetchNearbyPlaces();
-      fetchSavedPlaces();
-      // קבלת המיקום הנוכחי של המשתמש
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            setCurrentLocation({
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            });
-          },
-          (error) => console.error("שגיאה בקבלת מיקום המשתמש:", error)
-        );
-      }
 
-
-    }
-  }, [isLoaded]);
-
-  if (!isLoaded) return <div>Loading Google Maps...</div>
   // Filter the places based on the selected type
-  const filteredPlaces = placesget.filter((place) => {
+  const filteredPlaces = places.filter((place) => {
     return (
       selectedType === 'all' ||
       (place.allTypes && place.allTypes.includes(selectedType))
@@ -252,16 +151,12 @@ const Map = () => {
   });
 
   const handleSearch = () => {
-    const place = placesget.find((place) =>
+    const place = places.find((place) =>
       place.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     if (place) {
       setSelectedPlace(place);
-      // setCurrentLocation({
-      //   lat: place.location.lat,
-      //   lng: place.location.lng,
-      // });
     } else {
       alert('Place not found');
     }
@@ -270,55 +165,17 @@ const Map = () => {
 
   return (
     <div className="map-page" >
-      <div style={{ margin: '10px 0' }}>
-        <label
-          htmlFor="placeType"
-          style={{
-            marginRight: '10px',
-            padding: '5px',
-            fontSize: '16px',
-            border: '1px solid gray',
-            borderRadius: '5px',
-            backgroundColor: 'gray'
-          }}
-        >
-          Select Place Type:
-        </label>        <select
-          id="placeType"
-          value={selectedType}
-          onChange={(e) => setSelectedType(e.target.value)} // Update selected type on change
-          style={{ padding: '5px', fontSize: '16px' }}
-        >
-          <option value="all">All</option>
-          <option value="bar">Bar</option>
-          <option value="restaurant">Restaurant</option>
-          <option value="cafe">Café</option>
-          <option value="night_club">Night Club</option>
-          <option value="spa">Spa</option>
-          <option value="park">Park</option>
-        </select>
-      </div>
+      <MapControls selectedType={selectedType} setSelectedType={setSelectedType}searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleSearch={handleSearch}/>
 
-      <div style={{ marginBottom: '10px' }}>
-        <input
-          type="text"
-          placeholder="Search for a place"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ padding: '5px', fontSize: '16px', marginRight: '10px', width: 150 }}
-        />
-        <button onClick={handleSearch} style={{ padding: '5px', fontSize: '16px' }}>Search</button>
-      </div>
+      {/* <SwitchButton onFilteredPlacesChange ={setPlaces} currentLocation ={currentLocation} /> */}
 
       <RadiusFilter
         currentLocation={currentLocation}
-        places={places}
-        setFilteredPlaces={setPlacesGet}
+        setFilteredPlaces={setPlaces}
       />
 
-          
       <div className="top-rated-wrapper">
-        <TopRatedPlaces places={placesget} setSelectedPlace={setSelectedPlace} currentLocation ={currentLocation}/>
+        <TopRatedPlaces places={places} setSelectedPlace={setSelectedPlace} currentLocation={currentLocation} />
       </div>
 
       <div className="map-wrapper">
@@ -341,18 +198,17 @@ const Map = () => {
                 options={{
                   icon: {
                     url: getIconUrl(place.type, calculateAverageRating(place.reviews), hoveredMarkerId === placeId),
-                    scaledSize: new window.google.maps.Size(isHovered ? 30: 20 , isHovered ? 30: 20),
+                    scaledSize: new window.google.maps.Size(isHovered ? 30 : 20, isHovered ? 30 : 20),
                   },
                 }}
                 onMouseOver={() => setHoveredMarkerId(placeId)}
                 onMouseOut={() => setHoveredMarkerId(null)}
                 onClick={() => setSelectedPlace(place)}
-                
+
               />
             ) : null;
           })}
 
-          {/* Use default Google Maps icon for current location */}
           {/* סימון המיקום הנוכחי */}
           {currentLocation && (
             <Marker

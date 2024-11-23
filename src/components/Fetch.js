@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
-
 // fetch places in 5 km radius 
 function Fetch({ setPlaces, currentLocation }) {
     const fetchSavedPlaces = async () => {
         if (currentLocation == null) {
+            console.log(1)
             return
         }
-
       try {
         const response = await axios.get('http://localhost:5001/api/get-places');
   
         // פילטר מקומות בטווח של 5 ק"מ
         const filteredPlaces = response.data.data.filter((place) => {
-          const distance = calculateDistance(
+          const distance = calculateDistance(-
             currentLocation.lat,
             currentLocation.lng,
             place.location.lat,
@@ -22,6 +20,10 @@ function Fetch({ setPlaces, currentLocation }) {
           );
           return distance <= 5; // מסנן רק מקומות בטווח של 5 ק"מ
         });
+
+        console.log(filteredPlaces)
+        console.log(1)
+
         setPlaces(filteredPlaces); // שמירת המקומות המסוננים
       } catch (error) {
         console.error('Error fetching places from database:', error);
@@ -42,13 +44,17 @@ function Fetch({ setPlaces, currentLocation }) {
       return R * c; // מחזיר את המרחק בקילומטרים
     };
     useEffect(() => {
-        fetchSavedPlaces();
+      if (!currentLocation) {
+        console.log("Waiting for currentLocation to load...");
+        return;
+      }
+  
+      console.log("Fetching places with currentLocation:", currentLocation);
+      fetchSavedPlaces();
   
     }, [currentLocation]);
-    
-  
-    return <div></div>;
+
+    return <div> </div>;
   }
-  
   export default Fetch;
   
