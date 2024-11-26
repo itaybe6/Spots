@@ -1,0 +1,25 @@
+.star-rating {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .star {
+    font-size: 2rem;
+    transition: color 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .star.empty {
+    color: #ccc; /* צבע של כוכב ריק */
+  }
+  
+  .star.filled {
+    color: #ffcc00; /* צבע של כוכב מלא */
+  }
+  
+  .star:hover {
+    transform: scale(1.2);
+    color: #ff9900;
+  }
+  

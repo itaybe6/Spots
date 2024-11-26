@@ -19,12 +19,9 @@ const FetchPlaceDetails = ({ placeId ,handleDetails }) => {
             key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
           },
         });
-        console.log(placeId);
         if (response.data.status !== "OK") {
           throw new Error(response.data);
         }
-
-        console.log('Place Details:', response.data.result);
         handleDetails(response.data.result); // שמירת פרטי המקום
         setError(null);
       } catch (err) {

@@ -20,8 +20,8 @@
   /* מיקום רכיב המקומות המומלצים */
   .top-rated-wrapper {
     position: absolute;
-    top: 200px;
-    right: 250px;
+    top: 220px;
+    right: 130px;
     z-index: 999;
     width: 400px;
     background-color: #ffffff00;

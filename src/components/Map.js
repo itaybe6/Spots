@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { mapOptions } from './MapConfiguration';
 import axios from 'axios';
@@ -48,8 +48,8 @@ const Map = ({ currentLocation, places, setPlaces }) => {
   const [selectedType, setSelectedType] = useState('all'); // State to hold the selected type
   const [searchTerm, setSearchTerm] = useState(''); // State for the search term
 
-  
- 
+
+
   const containerStyle = {
     width: '90vw',
     height: '90vh',
@@ -63,7 +63,7 @@ const Map = ({ currentLocation, places, setPlaces }) => {
   }
 
 
-  
+
   const getIconUrl = (placeType, rating, isHovered) => {
     const hoverIcons = {
       restaurant: Restaurant,
@@ -166,10 +166,10 @@ const Map = ({ currentLocation, places, setPlaces }) => {
   return (
     <div className="map-page" >
 
-<div className="switch-button-container">
-    <SwitchButton onFilteredPlacesChange={setPlaces} currentLocation={currentLocation} />
-  </div>
-      <MapControls selectedType={selectedType} setSelectedType={setSelectedType}searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleSearch={handleSearch}/>
+      {/* <div className="switch-button-container">
+        <SwitchButton onFilteredPlacesChange={setPlaces} currentLocation={currentLocation} />
+      </div> */}
+      <MapControls selectedType={selectedType} setSelectedType={setSelectedType} searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleSearch={handleSearch} />
 
 
       <RadiusFilter
@@ -201,7 +201,7 @@ const Map = ({ currentLocation, places, setPlaces }) => {
                 options={{
                   icon: {
                     url: getIconUrl(place.type, calculateAverageRating(place.reviews), hoveredMarkerId === placeId),
-                    scaledSize: new window.google.maps.Size(isHovered ? 30 : 20, isHovered ? 30 : 20),
+                    scaledSize: new window.google.maps.Size(isHovered ? 40 : 35, isHovered ? 40 : 35),
                   },
                 }}
                 onMouseOver={() => setHoveredMarkerId(placeId)}

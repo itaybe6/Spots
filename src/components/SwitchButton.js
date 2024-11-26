@@ -19,7 +19,7 @@ const SwitchButton = ({ onFilteredPlacesChange ,currentLocation }) => {
                                 key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
                             },
                         });
-
+                        
                         return {
                             ...place,
                             opening_hours: response.data.result.opening_hours || null, // עדכון שעות הפתיחה אם קיימות

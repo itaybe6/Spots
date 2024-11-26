@@ -4,17 +4,18 @@ import Fetch from "./components/Fetch";
 import FetchApi from "./components/FetchApi";
 import { useJsApiLoader } from '@react-google-maps/api';
 import { libraries } from './components/libraries';
+import StarRating from "./components/StarRating";
 
 function App() {
   const [places, setPlaces] = useState([]);
   const [currentLocation, setCurrentLocation] = useState(null);
 
 
- const { isLoaded } = useJsApiLoader({
+  const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries: libraries,
   });
-  
+
   useEffect(() => {
     if (isLoaded) {
 
@@ -32,15 +33,24 @@ function App() {
 
     }
   }, [isLoaded]);
+
+
+
+  const [rating, setRating] = useState(0);
+
   return (
     <div className="App">
-      {currentLocation && (<Fetch setPlaces={setPlaces} currentLocation={currentLocation}  />)}
+
+
+
+
+      {currentLocation && (<Fetch setPlaces={setPlaces} currentLocation={currentLocation} />)}
       {/* <FetchApi setPlaces={setPlaces} currentLocation ={currentLocation}/> */}
       {places && currentLocation && (
-        <Map 
-          currentLocation={currentLocation} 
-          places={places} 
-          setPlaces={setPlaces} 
+        <Map
+          currentLocation={currentLocation}
+          places={places}
+          setPlaces={setPlaces}
         />
       )}
     </div>
