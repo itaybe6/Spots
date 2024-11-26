@@ -48,7 +48,7 @@ const RadiusFilter = ({ currentLocation, setFilteredPlaces }) => {
 
       <Fetch setPlaces={setPlaces} currentLocation={currentLocation} />
 
-      <label style={{ color: 'black' }} htmlFor="radius">Filter by Radius:</label>
+      <label style={{ color: 'white' }} htmlFor="radius">Filter by Radius:</label>
       <select
         id="radius"
         value={selectedRadius}
