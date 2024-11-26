@@ -165,9 +165,12 @@ const Map = ({ currentLocation, places, setPlaces }) => {
 
   return (
     <div className="map-page" >
+
+<div className="switch-button-container">
+    <SwitchButton onFilteredPlacesChange={setPlaces} currentLocation={currentLocation} />
+  </div>
       <MapControls selectedType={selectedType} setSelectedType={setSelectedType}searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleSearch={handleSearch}/>
 
-      {/* <SwitchButton onFilteredPlacesChange ={setPlaces} currentLocation ={currentLocation} /> */}
 
       <RadiusFilter
         currentLocation={currentLocation}

@@ -2,22 +2,19 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../style/SwitchButton.css';
 import Fetch from './Fetch';
-
-
 const SwitchButton = ({ onFilteredPlacesChange ,currentLocation }) => {
     const [isOpenFilterActive, setIsOpenFilterActive] = useState(false);
-    const [updatedPlaces, setUpdatedPlaces] = useState([]);
-    const [places, setPlaces] = useState([]);
-
-
+    const [updatedPlaces, setUpdatedPlaces] = useState([]); 
+    const [places, setPlaces] = useState([]); // save the updets place from db
     useEffect(() => {
         const fetchOpeningHours = async () => {
+
             const updatedPlacesWithHours = await Promise.all(
                 places.map(async (place) => {
                     try {
                         const response = await axios.get('http://localhost:8010/proxy/maps/api/place/details/json', {
                             params: {
-                                place_id: place.place_id, // ה-Place ID של המקום
+                                place_id: place.placeId, // ה-Place ID של המקום
                                 fields: 'opening_hours',
                                 key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
                             },
@@ -28,7 +25,7 @@ const SwitchButton = ({ onFilteredPlacesChange ,currentLocation }) => {
                             opening_hours: response.data.result.opening_hours || null, // עדכון שעות הפתיחה אם קיימות
                         };
                     } catch (error) {
-                        console.error(`Error fetching details for place_id ${place.place_id}:`, error);
+                        console.error(`Error fetching details for place_id ${place.name}:`, error);
                         return { ...place, opening_hours: null }; // אם יש שגיאה, נעדכן כ-null
                     }
                 })
@@ -39,7 +36,6 @@ const SwitchButton = ({ onFilteredPlacesChange ,currentLocation }) => {
 
         fetchOpeningHours();
     }, [places]);
-
     useEffect(() => {
         // Apply the filter when the switch changes
         const filteredPlaces = isOpenFilterActive
@@ -55,8 +51,10 @@ const SwitchButton = ({ onFilteredPlacesChange ,currentLocation }) => {
     };
 
     return (
-        <div>
+        
+        <div className="switch-button-container" >
             <Fetch setPlaces={setPlaces} currentLocation={currentLocation} />
+            <p className="switch-button-text">הצג מקומות פתוחים</p>
             <div className="power-switch">
                 <input
                     type="checkbox"
@@ -74,7 +72,6 @@ const SwitchButton = ({ onFilteredPlacesChange ,currentLocation }) => {
                     </svg>
                 </div>
             </div>
-
             <svg xmlns="http://www.w3.org/2000/svg" style={{ display: "none" }}>
                 <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" id="line">
                     <line x1="75" y1="34" x2="75" y2="58" />
