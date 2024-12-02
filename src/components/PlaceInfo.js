@@ -114,6 +114,7 @@ const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation }) => {
                 <div className="modal-overlay">
                     <div className="modal-content">
                         <VerifyBusinessForm
+                            placeName = {name}
                             placeId={placeId}
                             onClose={() => setShowVerifyModal(false)}
                         />

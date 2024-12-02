@@ -10,6 +10,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  placeName: {
+    type: String,
+    required: true
+  },
   businessId: {
     type: String, 
     required: false
@@ -17,6 +21,16 @@ const UserSchema = new mongoose.Schema({
   idNumber: {
     type: String, // מספר תעודת זהות
     required: true
+  },
+  status: {
+    type: String,
+    enum: ['Pending', 'Approved', 'Rejected'],
+    default: 'Pending',
+  },
+  role: {
+    type: String,
+    enum: ['admin', 'user'], // אפשרויות תפקיד
+    default: 'user', // ברירת מחדל: משתמש רגיל
   },
   businessCertificate: {
     type: String, // נתיב לקובץ תעודת עוסק שנשמר בשרת

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../style/VerifyBusinessForm.css";
 
-const VerifyBusinessForm = ({ placeId, onClose }) => {
+const VerifyBusinessForm = ({ placeId, onClose,placeName}) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [idNumber, setIdNumber] = useState("");
@@ -32,6 +32,7 @@ const VerifyBusinessForm = ({ placeId, onClose }) => {
   
       const formData = new FormData();
       formData.append("placeId", placeId);
+      formData.append("placeName", placeName);
       formData.append("email", email);
       formData.append("password", password);
       formData.append("idNumber", idNumber);

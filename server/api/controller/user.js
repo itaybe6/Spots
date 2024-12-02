@@ -7,7 +7,7 @@ const path = require('path');
 
 const verifyBusiness = async (req, res) => {
     try {
-        const { email, password, idNumber, placeId } = req.body;
+        const { email, password, idNumber, placeId ,placeName } = req.body;
 
         // בדיקה אם כל הקבצים הדרושים נשלחו
         if (!req.files || !req.files.businessDoc || !req.files.idDoc) {
@@ -27,6 +27,7 @@ const verifyBusiness = async (req, res) => {
         // יצירת משתמש חדש עם המידע שנשלח
         const newUser = new User({
             email,
+            placeName,
             password: hashedPassword, // שמירת הסיסמה המוצפנת
             idNumber,
             businessCertificate: businessDocPath,
@@ -60,18 +61,53 @@ const login = async (req, res) => {
             return res.status(401).json({ message: "Invalid password" });
         }
 
-        // יצירת טוקן
-        const token = jwt.sign({ id: user._id, email: user.email }, "your_secret_key", {
-            expiresIn: "1h",
-        });
-
+        const token = jwt.sign(
+            { id: user._id, role: user.role },
+            'your_jwt_secret_key', // המפתח הסודי
+            { expiresIn: '1h' } // תוקף הטוקן
+          );
+      
         res.status(200).json({ message: "Login successful", token });
     } catch (error) {
         res.status(500).json({ message: "Error logging in", error });
     }
 };
 
+
+const updateUserStatus = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+  
+      if (!['Approved', 'Rejected'].includes(status)) {
+        return res.status(400).json({ message: "Invalid status" });
+      }
+  
+      await User.findByIdAndUpdate(id, { status });
+  
+      res.status(200).json({ message: `User status updated to ${status}` });
+    } catch (error) {
+      console.error("Error updating user status:", error);
+      res.status(500).json({ message: "Error updating user status", error });
+    }
+  };
+  
+  const getPendingUsers = async (req, res) => {
+    try {
+      const users = await User.find({ status: 'Pending' }, 'email idNumber businessCertificate idDocument');
+      res.status(200).json(users);
+    } catch (error) {
+      console.error("Error fetching pending users:", error);
+      res.status(500).json({ message: "Error fetching pending users" });
+    }
+  };
+  
+
+ 
 module.exports = {
     verifyBusiness,
     login,
+    updateUserStatus,
+    getPendingUsers ,
+    
 };

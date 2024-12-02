@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../style/BusinessOwnerWithMessage.css";
 
-const BusinessOwnerWithMessage = ({ closeModal }) => {
+const BusinessOwnerWithMessage = ({ isCloseModal }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -20,8 +20,9 @@ const BusinessOwnerWithMessage = ({ closeModal }) => {
       localStorage.setItem("authToken", response.data.token);
 
       // הודעת הצלחה וסגירת החלון
-      alert("Login successful!");
-      closeModal();
+      alert("Login successful!" );
+      alert(localStorage.getItem("authToken"))
+      isCloseModal();
     } catch (error) {
       // טיפול בשגיאות
       setErrorMessage(error.response?.data?.message || "An error occurred");
@@ -31,7 +32,7 @@ const BusinessOwnerWithMessage = ({ closeModal }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-container">
-        <button className="close-button" onClick={closeModal}>
+        <button className="close-button" onClick={isCloseModal}>
           &times;
         </button>
         <h1 className="modal-title">Business Owner Login</h1>
