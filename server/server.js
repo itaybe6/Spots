@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const spotRoutes = require('./api/routes/spot'); 
+const userRoutes = require('./api/routes/user'); 
+
 
 const app = express();
 
@@ -25,6 +27,9 @@ mongoose.connect(mongoURI, {
 
 // שימוש ב-router
 app.use('/api', spotRoutes); // זו הדרך להוסיף את ה-router
+app.use('/user', userRoutes); // זו הדרך להוסיף את ה-router
+
+
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {

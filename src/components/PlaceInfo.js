@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AddReview from './AddReview';
 import ReviewsList from './ReviewsList';
+import VerifyBusinessForm from './VerifyBusinessForm';
 import '../style/PlaceInfo.css';
 import FetchPlaceDetails from './FetchPlaceDetails';
 
@@ -9,6 +10,7 @@ const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation }) => {
 
     const [placeDetails, setPlaceDetails] = useState(null); // שמירת נתוני המקום
     const [showOpeningHours, setShowOpeningHours] = useState(false); // ניהול תצוגת שעות הפעילות
+    const [showVerifyModal, setShowVerifyModal] = useState(false); // ניהול תצוגת טופס אימות
 
     const calculateDistance = (lat1, lng1, lat2, lng2) => {
         const toRad = (value) => (value * Math.PI) / 180;
@@ -103,8 +105,21 @@ const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation }) => {
             </div>
             {photo && <img src={photo} alt={name} className="place-info-photo" />}
 
+            {/* Verify This Business Button */}
+            <button className="verify-button" onClick={() => setShowVerifyModal(true)}>
+                Verify This Business
+            </button>
 
-
+            {showVerifyModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <VerifyBusinessForm
+                            placeId={placeId}
+                            onClose={() => setShowVerifyModal(false)}
+                        />
+                    </div>
+                </div>
+            )}
 
             <div className="review-section">
                 <AddReview onReviewSubmit={onReviewSubmit} _id={_id} />

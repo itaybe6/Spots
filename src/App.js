@@ -4,7 +4,7 @@ import Fetch from "./components/Fetch";
 import FetchApi from "./components/FetchApi";
 import { useJsApiLoader } from '@react-google-maps/api';
 import { libraries } from './components/libraries';
-import StarRating from "./components/StarRating";
+import WelcomeOptionsModal from "./components/WelcomeOptionsModal";
 
 function App() {
   const [places, setPlaces] = useState([]);
@@ -34,16 +34,9 @@ function App() {
     }
   }, [isLoaded]);
 
-
-
-  const [rating, setRating] = useState(0);
-
   return (
     <div className="App">
-
-
-
-
+      <WelcomeOptionsModal />
       {currentLocation && (<Fetch setPlaces={setPlaces} currentLocation={currentLocation} />)}
       {/* <FetchApi setPlaces={setPlaces} currentLocation ={currentLocation}/> */}
       {places && currentLocation && (
