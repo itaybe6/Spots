@@ -165,14 +165,18 @@ const Map = ({ currentLocation, places, setPlaces }) => {
     <div className="map-page" >
 
 
-      <MapControls selectedType={selectedType} setSelectedType={setSelectedType}
-        searchTerm={searchTerm} setSearchTerm={setSearchTerm}
-        handleSearch={handleSearch} currentLocation={currentLocation} 
-        onFilteredPlacesChange = {setPlaces}
+      <div className="MapControls">
+        <MapControls selectedType={selectedType} setSelectedType={setSelectedType}
+          searchTerm={searchTerm} setSearchTerm={setSearchTerm}
+          handleSearch={handleSearch} currentLocation={currentLocation}
+          onFilteredPlacesChange={setPlaces}
         />
+      </div>
 
 
-{/* <AddEvent  placeName="Forum" placeLocation = {currentLocation}/> */}
+
+
+      {/* <AddEvent  placeName="Forum" placeLocation = {currentLocation}/> */}
 
       <div className="top-rated-wrapper">
         <TopRatedPlaces places={places} setSelectedPlace={setSelectedPlace} currentLocation={currentLocation} />

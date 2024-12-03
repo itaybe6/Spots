@@ -54,6 +54,46 @@ function App() {
       location: "Art Gallery, Tel Aviv",
       image: "https://example.com/image2.jpg",
     },
+    {
+      title: "Art Exhibition",
+      date: "30/11",
+      time: "18:00",
+      location: "Art Gallery, Tel Aviv",
+      image: "https://example.com/image2.jpg",
+    },
+    {
+      title: "Art Exhibition",
+      date: "30/11",
+      time: "18:00",
+      location: "Art Gallery, Tel Aviv",
+      image: "https://example.com/image2.jpg",
+    },
+    {
+      title: "Art Exhibition",
+      date: "30/11",
+      time: "18:00",
+      location: "Art Gallery, Tel Aviv",
+      image: "https://example.com/image2.jpg",
+    },
+    {
+      title: "Art Exhibition",
+      date: "30/11",
+      time: "18:00",
+      location: "Art Gallery, Tel Aviv",
+      image: "https://example.com/image2.jpg",
+    }, {
+      title: "Art Exhibition",
+      date: "30/11",
+      time: "18:00",
+      location: "Art Gallery, Tel Aviv",
+      image: "https://example.com/image2.jpg",
+    }, {
+      title: "Art Exhibition",
+      date: "30/11",
+      time: "18:00",
+      location: "Art Gallery, Tel Aviv",
+      image: "https://example.com/image2.jpg",
+    },
     // ניתן להוסיף עוד אירועים
   ];
 
