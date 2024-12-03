@@ -1,4 +1,6 @@
-const User = require('../models/user'); // Ensure this path is correct
+const User = require('../models/user');
+const Event = require('../models/events'); 
+
 const bcrypt = require('bcrypt'); // For password hashing
 const jwt = require('jsonwebtoken'); // For generating tokens
 
@@ -7,13 +9,13 @@ const path = require('path');
 
 const verifyBusiness = async (req, res) => {
     try {
-        const { email, password, idNumber, placeId ,placeName } = req.body;
+        const { email, password, idNumber, placeId ,placeName ,placeLocation} = req.body;
 
         // בדיקה אם כל הקבצים הדרושים נשלחו
         if (!req.files || !req.files.businessDoc || !req.files.idDoc) {
             return res.status(400).json({ message: "Missing required documents" });
         }
-
+        parsedPlaceLocation = JSON.parse(placeLocation);
         const businessDoc = req.files.businessDoc[0];
         const idDoc = req.files.idDoc[0];
 
@@ -33,6 +35,10 @@ const verifyBusiness = async (req, res) => {
             businessCertificate: businessDocPath,
             idDocument: idDocPath, // הוספת הנתיב לתעודת הזהות
             businessId: placeId,
+            placeLocation :  {
+              lat: parsedPlaceLocation.lat,
+              lng: parsedPlaceLocation.lng,
+            },
         });
 
         // שמירת המשתמש במסד הנתונים
@@ -102,12 +108,50 @@ const updateUserStatus = async (req, res) => {
     }
   };
   
+  const addEvent = async (req, res) => {
+    try {
+      const {
+        placeName,
+        placeLocation,
+        eventType,
+        eventTitle,
+        eventDescription,
+        dateTime,
+        image,
+        link,
+      } = req.body;
+      parsedPlaceLocation = JSON.parse(placeLocation);
 
+      // יצירת אובייקט חדש של אירוע
+      const newEvent = new Event({
+        placeName,
+        eventType,
+        eventTitle,
+        eventDescription,
+        dateTime,
+        image,
+        link,
+        placeLocation :  {
+          lat: parsedPlaceLocation.lat,
+          lng: parsedPlaceLocation.lng,
+        },
+      });
+  
+      // שמירת האירוע במסד הנתונים
+      await newEvent.save();
+  
+      res.status(201).json({ message: 'Event added successfully', event: newEvent });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Failed to add event', error });
+    }
+  };
  
 module.exports = {
     verifyBusiness,
     login,
     updateUserStatus,
     getPendingUsers ,
-    
+    addEvent,
+
 };

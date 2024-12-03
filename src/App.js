@@ -6,6 +6,10 @@ import { useJsApiLoader } from '@react-google-maps/api';
 import { libraries } from './components/libraries';
 import WelcomeOptionsModal from "./components/WelcomeOptionsModal";
 import AdminDashboard from "./components/AdminDashboard";
+
+import EventsCarousel from "./components/EventsCarousel";
+
+
 function App() {
   const [places, setPlaces] = useState([]);
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -34,7 +38,24 @@ function App() {
     }
   }, [isLoaded]);
 
-
+  const eventsData = [
+    {
+      title: "The Substance",
+      date: "27/11",
+      time: "21:10",
+      location: "Cinema City, Be'er Sheva",
+      image: "https://example.com/image1.jpg",
+    },
+    
+    {
+      title: "Art Exhibition",
+      date: "30/11",
+      time: "18:00",
+      location: "Art Gallery, Tel Aviv",
+      image: "https://example.com/image2.jpg",
+    },
+    // ניתן להוסיף עוד אירועים
+  ];
 
   useEffect(() => {
     // בדיקה אם המשתמש הוא אדמין
@@ -54,6 +75,7 @@ function App() {
   return (
     <div className="App">
       {/* <AdminDashboard /> */}
+      <EventsCarousel events={eventsData} />
       <WelcomeOptionsModal />
       {currentLocation && (<Fetch setPlaces={setPlaces} currentLocation={currentLocation} />)}
       {/* <FetchApi setPlaces={setPlaces} currentLocation ={currentLocation}/> */}

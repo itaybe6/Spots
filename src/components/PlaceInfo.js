@@ -117,6 +117,7 @@ const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation }) => {
                             placeName = {name}
                             placeId={placeId}
                             onClose={() => setShowVerifyModal(false)}
+                            placeLocation = {location}
                         />
                     </div>
                 </div>

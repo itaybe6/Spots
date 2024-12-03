@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../style/VerifyBusinessForm.css";
 
-const VerifyBusinessForm = ({ placeId, onClose,placeName}) => {
+const VerifyBusinessForm = ({ placeId, onClose,placeName,placeLocation}) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [idNumber, setIdNumber] = useState("");
@@ -18,7 +18,7 @@ const VerifyBusinessForm = ({ placeId, onClose,placeName}) => {
       const idRegex = /^[0-9]{9}$/; // בדיוק 9 ספרות
       return idRegex.test(id);
     };
-  
+console.log(placeLocation)
     const handleSubmit = async () => {
       if (!email || !password || !idNumber || !businessDoc || !idDoc) {
         alert("Please fill in all required fields.");
@@ -29,7 +29,6 @@ const VerifyBusinessForm = ({ placeId, onClose,placeName}) => {
         alert("ID number must be exactly 9 digits.");
         return;
       }
-  
       const formData = new FormData();
       formData.append("placeId", placeId);
       formData.append("placeName", placeName);
@@ -38,7 +37,8 @@ const VerifyBusinessForm = ({ placeId, onClose,placeName}) => {
       formData.append("idNumber", idNumber);
       formData.append("businessDoc", businessDoc);
       formData.append("idDoc", idDoc);
-  
+      formData.append("placeLocation",  JSON.stringify(placeLocation));
+
       setLoading(true);
       try {
         const response = await axios.post("http://localhost:5001/user/verify-business", formData, {

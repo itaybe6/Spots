@@ -20,7 +20,7 @@
   /* מיקום רכיב המקומות המומלצים */
   .top-rated-wrapper {
     position: absolute;
-    top: 220px;
+    top: 250px;
     right: 130px;
     z-index: 999;
     width: 400px;

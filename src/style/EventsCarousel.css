@@ -1,0 +1,83 @@
+/* מיכל כללי של הקרוסלה */
+.events-carousel-container {
+    position: absolute;
+    top: 10px;
+    left: 350px;
+    width: calc(100% - 400px);
+    height: auto;
+    background-color: transparent;
+    padding: 10px;
+  }
+  
+  .events-carousel {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 10px;
+  }
+  
+  .event-card {
+    background-color: #2e2e2e;
+    border-radius: 10px;
+    width: 300px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .event-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  }
+  
+  .event-card-image {
+    width: 100%;
+    height: 90px;
+    object-fit: cover;
+  }
+  
+  .event-card-content {
+    padding: 5px;
+    color: #fff;
+    display: flex;
+    justify-content: space-between; /* מיקום הכפתור מימין לטקסט */
+    align-items: center;
+  }
+  
+  .event-card-text {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .event-card-title {
+    font-size: 16px;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .event-card-date,
+  .event-card-location {
+    font-size: 14px;
+    margin: 2px 0;
+  }
+  
+  .event-card-button {
+    padding: 8px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+  }
+  
+  .event-card-button:hover {
+    background-color: #45a049;
+  }
+  

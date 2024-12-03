@@ -3,11 +3,9 @@ import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from '@react-google-map
 import { mapOptions } from './MapConfiguration';
 import axios from 'axios';
 import PlaceInfo from './PlaceInfo';
-import RadiusFilter from './RadiusFilter';
 import TopRatedPlaces from './TopRatedPlaces';
-import SwitchButton from './SwitchButton';
-
 import MapControls from './MapControls';
+import AddEvent from './AddEvents';
 import '../style/Map.css'
 
 import Restaurant from '../assets/images/Restaurant.png';
@@ -166,8 +164,6 @@ const Map = ({ currentLocation, places, setPlaces }) => {
   return (
     <div className="map-page" >
 
-     
-
 
       <MapControls selectedType={selectedType} setSelectedType={setSelectedType}
         searchTerm={searchTerm} setSearchTerm={setSearchTerm}
@@ -175,6 +171,8 @@ const Map = ({ currentLocation, places, setPlaces }) => {
         onFilteredPlacesChange = {setPlaces}
         />
 
+
+{/* <AddEvent  placeName="Forum" placeLocation = {currentLocation}/> */}
 
       <div className="top-rated-wrapper">
         <TopRatedPlaces places={places} setSelectedPlace={setSelectedPlace} currentLocation={currentLocation} />
