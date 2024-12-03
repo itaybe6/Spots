@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../style/SwitchButton.css';
 import Fetch from './Fetch';
-const SwitchButton = ({ onFilteredPlacesChange ,currentLocation }) => {
+const SwitchButton = ({ onFilteredPlacesChange, currentLocation }) => {
     const [isOpenFilterActive, setIsOpenFilterActive] = useState(false);
-    const [updatedPlaces, setUpdatedPlaces] = useState([]); 
+    const [updatedPlaces, setUpdatedPlaces] = useState([]);
     const [places, setPlaces] = useState([]); // save the updets place from db
     useEffect(() => {
         const fetchOpeningHours = async () => {
@@ -19,7 +19,7 @@ const SwitchButton = ({ onFilteredPlacesChange ,currentLocation }) => {
                                 key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
                             },
                         });
-                        
+
                         return {
                             ...place,
                             opening_hours: response.data.result.opening_hours || null, // עדכון שעות הפתיחה אם קיימות
@@ -51,35 +51,22 @@ const SwitchButton = ({ onFilteredPlacesChange ,currentLocation }) => {
     };
 
     return (
-        
-        <div className="switch-button-container" >
+
+        <div >
             <Fetch setPlaces={setPlaces} currentLocation={currentLocation} />
-            <p className="switch-button-text">הצג מקומות פתוחים</p>
-            <div className="power-switch">
-                <input
-                    type="checkbox"
-                    checked={isOpenFilterActive}
-                    onChange={handleSwitchToggle}
-                />
-                <div className="button">
-                    <svg className="power-off">
-                        <use href="#line" className="line" />
-                        <use href="#circle" className="circle" />
-                    </svg>
-                    <svg className="power-on">
-                        <use href="#line" className="line" />
-                        <use href="#circle" className="circle" />
-                    </svg>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", color: "white", marginBottom: "10px" }}>
+            <label className="custom-switch-label">Show Open Places</label>
+            <div className="custom-switch">
+                    <input
+                        type="checkbox"
+                        id="switch"
+                        checked={isOpenFilterActive}
+                        onChange={handleSwitchToggle} 
+                    />
+                    <label className="slider" htmlFor="switch"></label>
                 </div>
+
             </div>
-            <svg xmlns="http://www.w3.org/2000/svg" style={{ display: "none" }}>
-                <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" id="line">
-                    <line x1="75" y1="34" x2="75" y2="58" />
-                </symbol>
-                <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" id="circle">
-                    <circle cx="75" cy="80" r="35" />
-                </symbol>
-            </svg>
         </div>
     );
 };

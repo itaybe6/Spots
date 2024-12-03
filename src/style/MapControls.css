@@ -1,0 +1,14 @@
+.container {
+    margin-top: 150px;
+    border: 2px solid #ccc; /* גבול מסביב */
+    border-radius: 10px; /* בורדר רדיוס */
+    padding: 10px; /* ריווח פנימי */
+    display: inline-block; /* להתאים לגודל התוכן */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* אנימציית מעבר */
+  }
+  
+  .container:hover {
+    transform: scale(1.05); /* הגדלה */
+    box-shadow: 0 4px 8px rgb(255, 242, 242); /* הוספת הצללה */
+  }
+  

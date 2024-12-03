@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Fetch from './Fetch';
 
-const RadiusFilter = ({ currentLocation, setFilteredPlaces }) => {
+const RadiusFilter = ({ currentLocation, onFilteredPlacesChange }) => {
   const [selectedRadius, setSelectedRadius] = useState('all');
 
   const [places, setPlaces] = useState([]);
@@ -27,7 +27,7 @@ const RadiusFilter = ({ currentLocation, setFilteredPlaces }) => {
     setSelectedRadius(radius);
 
     if (radius === 'all') {
-      setFilteredPlaces(places); // הצגת כל המקומות
+      onFilteredPlacesChange(places); // הצגת כל המקומות
     } else {
       const radiusKm = parseFloat(radius);
       const filtered = places.filter((place) => {
@@ -40,7 +40,7 @@ const RadiusFilter = ({ currentLocation, setFilteredPlaces }) => {
         return distance <= radiusKm;
       });
       console.log(filtered)
-      setFilteredPlaces(filtered); // עדכון המקומות המסוננים
+      onFilteredPlacesChange(filtered); // עדכון המקומות המסוננים
     }
   };
   return (
