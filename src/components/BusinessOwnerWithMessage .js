@@ -6,6 +6,8 @@ const BusinessOwnerWithMessage = ({ isCloseModal }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [message, setMessage] = useState("If you haven't verified your business yet, you can do so by locatingyour business on the map and clicking the Verify button.");
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -15,7 +17,13 @@ const BusinessOwnerWithMessage = ({ isCloseModal }) => {
         email,
         password,
       });
+      const decodedToken = JSON.parse(atob(response.data.token.split('.')[1])); // פענוח ה-Token
 
+      if (decodedToken.status == "Pending") {
+        setMessage("The user has not yet been approved by the site administrator, only after approval will you be able to connect to the business owner.")
+        return
+        
+      }
       // שמירת הטוקן ב-localStorage
       localStorage.setItem("authToken", response.data.token);
 
@@ -36,8 +44,7 @@ const BusinessOwnerWithMessage = ({ isCloseModal }) => {
         </button>
         <h1 className="modal-title">Business Owner Login</h1>
         <p className="modal-description">
-          If you haven't verified your business yet, you can do so by locating
-          your business on the map and clicking the "Verify" button.
+         {message}
         </p>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
         <form onSubmit={handleLogin}>

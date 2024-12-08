@@ -69,7 +69,7 @@ const login = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { id: user._id, role: user.role , placeName : user.placeName , placeLocation : user.placeLocation },
+            { id: user._id, role: user.role , placeName : user.placeName , placeLocation : user.placeLocation  , status :user.status},
             'your_jwt_secret_key', // המפתח הסודי
             { expiresIn: '1h' } // תוקף הטוקן
           );

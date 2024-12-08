@@ -46,19 +46,18 @@ const EventPopup = ({ event, onClose }) => {
           alt={event.eventTitle}
           className="popup-image"
         />
-       <div className="popup-content">
-  <h2 className="popup-title">{event.eventTitle}</h2>
-  <p className="popup-type">{event.eventType}</p>
-  <p className="popup-date">{new Date(event.dateTime).toLocaleDateString()}</p>
-  <p className="popup-location">{event.placeName}</p>
-  <p className="popup-description">{event.eventDescription}</p>
-  <div className="popup-info">
-    <p className="popup-address">📍 Address: 123 Example St, Cityville</p>
-    <a href="tel:+1234567890" className="popup-phone-button">
-      📞 Call Now
-    </a>
-  </div>
-</div>
+        <div className="popup-content">
+          <h2 className="popup-title">{event.eventTitle}-{event.eventType}</h2>
+          <p className="popup-date">{new Date(event.dateTime).toLocaleDateString()}</p>
+          <p className="popup-location">{event.placeName}</p>
+          <p className="popup-description">{event.eventDescription}</p>
+          <div className="popup-info">
+            <p className="popup-address">📍 Address: 123 Example St, Cityville</p>
+            <a href="tel:+1234567890" className="popup-phone-button">
+              📞 Call Now
+            </a>
+          </div>
+        </div>
 
       </div>
 
