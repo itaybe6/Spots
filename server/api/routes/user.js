@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { verifyBusiness, login, getPendingUsers, updateUserStatus , addEvent } = require('../controller/user');
+const { verifyBusiness, login, getPendingUsers, updateUserStatus , addEvent ,getEvents} = require('../controller/user');
 const multer = require('multer');
 const adminAuth = require('../middleware/adminAuth'); // ייבוא ה-Middleware
 
@@ -21,6 +21,11 @@ router.get('/admin/pending-users', adminAuth, getPendingUsers);
 
 router.post('/admin/update-status/:id',adminAuth, updateUserStatus);
 
-router.post('/add-event', addEvent);
+router.post('/add-event',upload.single('image'), addEvent);
+
+router.get("/events", getEvents);
+
 
 module.exports = router;
+
+

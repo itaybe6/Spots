@@ -32,7 +32,7 @@
   /* מיקום רכיב המקומות המומלצים */
   .top-rated-wrapper {
     position: absolute;
-    top: 450px;
+    top: 350px;
     right: 130px;
     z-index: 999;
     width: 400px;

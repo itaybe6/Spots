@@ -3,7 +3,7 @@
     position: absolute;
     top: 15px;
     left: 380px;
-    width: 1420px;
+    width: 1380px;
     height: auto;
     background-color: #00000052;
     padding: 20px;
@@ -14,75 +14,95 @@
     display: flex;
     overflow-x: auto;
     gap: 15px;
-    padding: 10px;
-  }
-  
-  .event-card {
-    background-color: #2e2e2e;
-    border-radius: 10px;
-    width: 300px;
-    flex-shrink: 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-  
-  .event-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  }
-  
-  .event-card-image {
-    width: 100%;
-    height: 90px;
-    object-fit: cover;
-  }
-  
-  .event-card-content {
     padding: 5px;
-    color: #fff;
-    display: flex;
-    justify-content: space-between; /* מיקום הכפתור מימין לטקסט */
-    align-items: center;
+    scroll-behavior: smooth; /* מאפשר גלילה חלקה */
+
   }
   
-  .event-card-text {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  
-  .event-card-title {
-    font-size: 16px;
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-  
-  .event-card-date,
-  .event-card-location {
-    font-size: 14px;
-    margin: 2px 0;
-  }
-  
-  .event-card-button {
-    padding: 8px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
-    white-space: nowrap;
-  }
-  
-  .event-card-button:hover {
-    background-color: #45a049;
-  }
-  /* עיצוב פס הגלילה */
-/* עיצוב פס הגלילה */
+ /* עיצוב כרטיס */
+.event-card {
+  background-color: #2e2e2e;
+  border-radius: 10px;
+  width: 280px; /* רוחב הכרטיס */
+  flex-shrink: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.event-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 1px 8px rgba(255, 255, 255, 255);
+}
+/* עיצוב תוכן הטקסט */
+.event-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* מרווחים קטנים יותר בין השורות */
+}
+/* עיצוב תמונה */
+.event-card-image {
+  width: 100%;
+  height: 120px; /* גובה התמונה */
+  object-fit: cover;
+  margin-bottom: 5px;
+}
+
+/* תוכן הכרטיס */
+.event-card-content {
+  padding: 10px;
+  color: #fff;
+  display: flex;
+  justify-content: space-between; /* מציב את הכפתור מימין */
+  align-items: center; /* מיישר אנכית */
+}
+
+/* כותרת */
+.event-card-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* סוג האירוע */
+.event-card-type {
+  font-size: 14px;
+  margin: 0;
+  color: #a0a0a0;
+}
+
+/* תאריך ומיקום */
+.event-card-date,
+.event-card-location {
+  font-size: 13px; /* גודל טקסט */
+  margin: 0;
+  line-height: 1.4; /* מרווח שורות */
+  white-space: nowrap; /* מונע ירידה לשורה חדשה */
+  overflow: hidden; /* חותך את הטקסט */
+  text-overflow: ellipsis; /* מוסיף שלוש נקודות בסוף הטקסט אם הוא חורג */
+}
+
+/* כפתור */
+.event-card-button {
+  padding: 8px 12px;
+  background-color: #4caf50;
+  color: white;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  white-space: nowrap; /* מבטיח שהטקסט בכפתור לא יגלוש */
+  margin-left: 10px; /* רווח בין הכפתור למלל */
+}
+
+.event-card-button:hover {
+  background-color: #45a049;
+} 
+
+
 .events-carousel::-webkit-scrollbar {
   height: 8px; /* גובה פס הגלילה */
 }
@@ -230,4 +250,18 @@
 .add-event-card:hover .add-event-icon {
   transform: scale(1.2); /* הגדלה קטנה של האייקון */
   transition: transform 0.3s;
+}
+.event-card-button {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #4caf50;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  text-align: center;
+  transition: background-color 0.3s;
+}
+
+.event-card-button:hover {
+  background-color: #45a049;
 }

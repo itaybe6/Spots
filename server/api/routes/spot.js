@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { savePlacesToDatabase, addReview } = require('../controller/spot'); // Ensure the path is correct
+const { savePlacesToDatabase, addReview,getPlaceByName } = require('../controller/spot'); // Ensure the path is correct
 const Spot = require('../models/spot'); // Ensure the path is correct for your model
 const Review = require('../models/review'); // Import your Review model
 const mongoose = require('mongoose');
@@ -36,6 +36,7 @@ router.get('/get-places', async (req, res) => {
   }
 });
 
+router.get('/places/:placeName', async (req, res) => getPlaceByName(req, res));
 
 
 

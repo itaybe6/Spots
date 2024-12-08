@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "../style/AddEvent.css";
+import axios from 'axios';
 
-const AddEvent = ({ placeName , placeLocation }) => {
+const AddEvent = ({ placeName, placeLocation }) => {
   const [formData, setFormData] = useState({
     eventType: "",
     title: "",
@@ -9,8 +10,7 @@ const AddEvent = ({ placeName , placeLocation }) => {
     link: "",
     image: null,
     date: "",
-    startTime: "",
-    endTime: "",
+    time: "",
   });
 
   const handleInputChange = (e) => {
@@ -24,50 +24,41 @@ const AddEvent = ({ placeName , placeLocation }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    const eventData = {
-      eventType: formData.eventType,
-      placeName,
-      eventTitle: formData.title,
-      eventDescription: formData.description,
-      dateTime: formData.date,
-      image: formData.image ? formData.image.name : '',
-      link: formData.link,
-      placeLocation : JSON.stringify(placeLocation),
-    };
-  
+
+    const Data = new FormData();
+    Data.append("eventType", formData.eventType);
+    Data.append("placeName", placeName);
+    Data.append("eventTitle", formData.title);
+    Data.append("eventDescription", formData.description);
+    Data.append("dateTime", `${formData.date}T${formData.time}`);
+    Data.append("image", formData.image ? formData.image : "");
+    Data.append("link", formData.link);
+    Data.append("placeLocation", JSON.stringify(placeLocation));
+
     try {
-      const response = await fetch('http://localhost:5001/user/add-event', {
-        method: 'POST',
+      const response = await axios.post("http://localhost:5001/user/add-event", Data, {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "multipart/form-data",
         },
-        body: JSON.stringify(eventData),
       });
-  
-      const result = await response.json();
-  
-      if (response.ok) {
-        alert('Event added successfully');
-        console.log(result);
+
+      if (!response.data) {
+        console.log("Event add with error", response.data);
       } else {
-        alert('Failed to add event');
-        console.error(result);
+        alert("Event added successfully");
       }
     } catch (error) {
-      console.error('Error adding event:', error);
-      alert('An error occurred while adding the event');
+      console.error("Error adding event:", error);
+      alert("An error occurred while adding the event");
     }
   };
-  
+
   return (
     <div className="add-event-container">
       <h2 className="add-event-title">Add Event for {placeName}</h2>
       <form className="add-event-form" onSubmit={handleSubmit}>
         <div className="add-event-form-group">
-          <label className="add-event-label" htmlFor="eventType">
-            Event Type
-          </label>
+          <label className="add-event-label" htmlFor="eventType">Event Type</label>
           <select
             id="eventType"
             name="eventType"
@@ -86,9 +77,7 @@ const AddEvent = ({ placeName , placeLocation }) => {
         </div>
 
         <div className="add-event-form-group">
-          <label className="add-event-label" htmlFor="title">
-            Event Title
-          </label>
+          <label className="add-event-label" htmlFor="title">Event Title</label>
           <input
             type="text"
             id="title"
@@ -101,9 +90,7 @@ const AddEvent = ({ placeName , placeLocation }) => {
         </div>
 
         <div className="add-event-form-group">
-          <label className="add-event-label" htmlFor="description">
-            Description
-          </label>
+          <label className="add-event-label" htmlFor="description">Description</label>
           <textarea
             id="description"
             name="description"
@@ -115,9 +102,7 @@ const AddEvent = ({ placeName , placeLocation }) => {
         </div>
 
         <div className="add-event-form-group">
-          <label className="add-event-label" htmlFor="link">
-            Event Link (Optional)
-          </label>
+          <label className="add-event-label" htmlFor="link">Event Link (Optional)</label>
           <input
             type="url"
             id="link"
@@ -130,9 +115,7 @@ const AddEvent = ({ placeName , placeLocation }) => {
         </div>
 
         <div className="add-event-form-group">
-          <label className="add-event-label" htmlFor="date">
-            Event Date
-          </label>
+          <label className="add-event-label" htmlFor="date">Event Date</label>
           <input
             type="date"
             id="date"
@@ -144,37 +127,19 @@ const AddEvent = ({ placeName , placeLocation }) => {
         </div>
 
         <div className="add-event-form-group">
-          <label className="add-event-label" htmlFor="startTime">
-            Start Time
-          </label>
+          <label className="add-event-label" htmlFor="time">Event Time</label>
           <input
             type="time"
-            id="startTime"
-            name="startTime"
-            value={formData.startTime}
+            id="time"
+            name="time"
+            value={formData.time}
             onChange={handleInputChange}
             className="add-event-input"
           />
         </div>
 
         <div className="add-event-form-group">
-          <label className="add-event-label" htmlFor="endTime">
-            End Time
-          </label>
-          <input
-            type="time"
-            id="endTime"
-            name="endTime"
-            value={formData.endTime}
-            onChange={handleInputChange}
-            className="add-event-input"
-          />
-        </div>
-
-        <div className="add-event-form-group">
-          <label className="add-event-label" htmlFor="image">
-            Upload Image
-          </label>
+          <label className="add-event-label" htmlFor="image">Upload Image</label>
           <input
             type="file"
             id="image"
@@ -185,9 +150,7 @@ const AddEvent = ({ placeName , placeLocation }) => {
           />
         </div>
 
-        <button type="submit" className="add-event-submit-btn" onClick={handleSubmit}>
-          Submit Event
-        </button>
+        <button type="submit" className="add-event-submit-btn">Submit Event</button>
       </form>
     </div>
   );

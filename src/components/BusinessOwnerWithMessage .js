@@ -21,7 +21,6 @@ const BusinessOwnerWithMessage = ({ isCloseModal }) => {
 
       // הודעת הצלחה וסגירת החלון
       alert("Login successful!" );
-      alert(localStorage.getItem("authToken"))
       isCloseModal();
     } catch (error) {
       // טיפול בשגיאות

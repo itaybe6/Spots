@@ -85,12 +85,31 @@ const addReview = async (req, res) => {
   }
 };
 
+const getPlaceByName = async (req, res) => {
+  try {
+    const { placeName } = req.params; // שליפת מזהה ה-_id מהפרמטרים ב-URL
 
+    console.log(placeName)
+
+    const place = await Spot.findOne({name:placeName}); // חיפוש מקום במסד הנתונים לפי _id
+    console.log(place)
+
+    if (!place) {
+      return res.status(404).json({ message: "Place not found" });
+    }
+
+    res.status(200).json(place); // החזרת פרטי המקום
+  } catch (error) {
+    console.error("Error fetching place details:", error);
+    res.status(500).json({ message: "Error retrieving place details" });
+  }
+};
 
 module.exports = {
   savePlacesToDatabase,
   getAllPlaces,
   addReview,
+  getPlaceByName,
 };
 
 

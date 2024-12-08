@@ -25,6 +25,7 @@ const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation }) => {
         return R * c;
     };
 
+    console.log(name)
     const calculateWalkingTime = (distanceKm) => {
         const walkingSpeedKmPerMin = 5 / 60; // מהירות הליכה ממוצעת בקמ"ש מחולקת ל-60 כדי לקבל ק"מ לדקה
         const walkingTimeInMinutes = distanceKm / walkingSpeedKmPerMin;

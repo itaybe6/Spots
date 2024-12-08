@@ -14,11 +14,11 @@ const VerifyBusinessForm = ({ placeId, onClose,placeName,placeLocation}) => {
       setter(e.target.files[0]);
     };
   
+    console.log(placeName)
     const validateIdNumber = (id) => {
       const idRegex = /^[0-9]{9}$/; // בדיוק 9 ספרות
       return idRegex.test(id);
     };
-console.log(placeLocation)
     const handleSubmit = async () => {
       if (!email || !password || !idNumber || !businessDoc || !idDoc) {
         alert("Please fill in all required fields.");

@@ -3,6 +3,7 @@ const Event = require('../models/events');
 
 const bcrypt = require('bcrypt'); // For password hashing
 const jwt = require('jsonwebtoken'); // For generating tokens
+const fs = require('fs'); //
 
 const path = require('path');
 
@@ -109,6 +110,7 @@ const updateUserStatus = async (req, res) => {
   };
   
   const addEvent = async (req, res) => {
+    
     try {
       const {
         placeName,
@@ -117,11 +119,18 @@ const updateUserStatus = async (req, res) => {
         eventTitle,
         eventDescription,
         dateTime,
-        image,
         link,
       } = req.body;
       parsedPlaceLocation = JSON.parse(placeLocation);
 
+      console.log(req.file)
+      let imageData = null;
+      if (req.file) {
+        const imageBuffer = fs.readFileSync(req.file.path);
+        imageData = imageBuffer.toString('base64');
+        fs.unlinkSync(req.file.path);
+      }
+  
       // יצירת אובייקט חדש של אירוע
       const newEvent = new Event({
         placeName,
@@ -129,7 +138,7 @@ const updateUserStatus = async (req, res) => {
         eventTitle,
         eventDescription,
         dateTime,
-        image,
+        image : imageData ,
         link,
         placeLocation :  {
           lat: parsedPlaceLocation.lat,
@@ -147,11 +156,24 @@ const updateUserStatus = async (req, res) => {
     }
   };
  
+
+  const getEvents = async (req, res) => {
+    try {
+      // שאילתת MongoDB לשליפת כל האירועים
+      const events = await Event.find();
+      res.status(200).json(events); // החזרת האירועים בתור JSON
+    } catch (error) {
+      console.error("Error fetching events:", error);
+      res.status(500).json({ message: "Failed to fetch events" });
+    }
+  };
+
 module.exports = {
     verifyBusiness,
     login,
     updateUserStatus,
     getPendingUsers ,
     addEvent,
+    getEvents ,
 
 };
