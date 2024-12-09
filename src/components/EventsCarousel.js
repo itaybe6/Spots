@@ -3,7 +3,7 @@ import AddEvent from "./AddEvents";
 import FetchEvents from "./FetchEvents";
 import EventPopup from "./EventPopup";
 import "../style/EventsCarousel.css";
-const EventsCarousel = ({ events }) => {
+const EventsCarousel = ({  currentLocation}) => {
   const [showAddEvent, setShowAddEvent] = useState(false);
   const [isUser, setIsUser] = useState(false);
   const [placeName, setPlaceName] = useState(false);
@@ -67,7 +67,7 @@ const EventsCarousel = ({ events }) => {
 
   return (
     <div className="events-carousel-container">
-      <FetchEvents setEvents={setEvents} />
+      <FetchEvents setEvents={setEvents} currentLocation={currentLocation} />
       <div className="events-carousel" ref={carouselRef}>
 
 
@@ -78,37 +78,24 @@ const EventsCarousel = ({ events }) => {
           </div>
         </div>}
 
+{eventss.map((event, index) => (
+  <div
+    className="event-card"
+    key={index}
+    onClick={() => handleButtonClick(event)} // הפיכת כל התמונה ללחיצה
+  >
+    <img
+      src={`data:image/jpeg;base64,${event.image}`}
+      alt={event.eventTitle}
+      className="event-card-image"
+    />
+    <div className="event-card-overlay">
+      <p>{event.eventType} - {event.eventTitle}</p>
+      <p>{event.placeName}</p>
+    </div>
+  </div>
+))}
 
-        {eventss.map((event, index) => (
-          <div className="event-card" key={index}>
-            {/* תמונת האירוע */}
-            {event.image && (
-              <img
-                src={`data:image/jpeg;base64,${event.image}`}
-                alt={event.eventTitle}
-                className="event-card-image"
-              />
-            )}
-
-            {/* תוכן הכרטיס */}
-            <div className="event-card-content">
-              <div className="event-card-text">
-                <h4 className="event-card-title">{event.eventTitle}</h4>
-                <p className="event-card-type">{event.eventType}</p>
-                <p className="event-card-date">
-                  {new Date(event.dateTime).toLocaleDateString()}
-                </p>
-                <p className="event-card-location">{event.placeName}</p>
-              </div>
-              <button
-                onClick={() => handleButtonClick(event)} // פתיחת הפופ-אפ בלחיצה
-                className="event-card-button"
-              >
-                More Info
-              </button>
-            </div>
-          </div>
-        ))}
 
       </div>
 

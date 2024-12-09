@@ -5,7 +5,7 @@ import axios from 'axios';
 import PlaceInfo from './PlaceInfo';
 import TopRatedPlaces from './TopRatedPlaces';
 import MapControls from './MapControls';
-import AddEvent from './AddEvents';
+import FetchEvents from './FetchEvents';
 import '../style/Map.css'
 
 import Restaurant from '../assets/images/Restaurant.png';
@@ -13,7 +13,7 @@ import Spa from '../assets/images/Spa.png';
 import Bar from '../assets/images/Bar.png';
 import Coffee from '../assets/images/Coffee.png';
 import Party from '../assets/images/Party.png';
-
+import unic from '../assets/images/unic.png';
 
 
 import restaurant_green from '../assets/images/restaurant_green.png';
@@ -41,11 +41,15 @@ import party_yellow from '../assets/images/party_yellow.png';
 const Map = ({ currentLocation, places, setPlaces }) => {
 
 
+
   const [hoveredMarkerId, setHoveredMarkerId] = useState(null);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [selectedType, setSelectedType] = useState('all'); // State to hold the selected type
   const [searchTerm, setSearchTerm] = useState(''); // State for the search term
+  const [events, setEvents] = useState([]); 
+  const [nameOfPlaces, setNameOfPlaces] = useState([]); 
 
+  // const [IDSevents, setIDSevents] = useState([]); 
 
 
   const containerStyle = {
@@ -62,7 +66,10 @@ const Map = ({ currentLocation, places, setPlaces }) => {
 
 
 
-  const getIconUrl = (placeType, rating, isHovered) => {
+  const getIconUrl = (placeType, rating, isHovered,placeName) => {
+    if (placeName in nameOfPlaces) {
+     return unic
+    }
     const hoverIcons = {
       restaurant: Restaurant,
       bar: Bar,
@@ -101,8 +108,10 @@ const Map = ({ currentLocation, places, setPlaces }) => {
     }
 
     // בחירת אייקון לפי הדירוג כאשר העכבר לא נמצא מעל המרקר
-    if (rating >= 4) return greenIcons[placeType] || restaurant_green;
-    if (rating < 4 && rating >= 2.8) return yellowIcons[placeType] || restaurant_yellow;
+    if (rating >= 4) 
+      return greenIcons[placeType] || restaurant_green;
+    if (rating < 4 && rating >= 2.8) 
+      return yellowIcons[placeType] || restaurant_yellow;
     return redIcons[placeType] || restaurant_red;
   };
 
@@ -138,8 +147,6 @@ const Map = ({ currentLocation, places, setPlaces }) => {
   };
 
 
-
-
   // Filter the places based on the selected type
   const filteredPlaces = places.filter((place) => {
     return (
@@ -160,16 +167,25 @@ const Map = ({ currentLocation, places, setPlaces }) => {
     }
   };
 
+// שמות כל המקומות שיש להם אירוע
+  useEffect(() => {
+    const names = events.map(event => event.placeName); // יוצרים מערך של תעודות זהות
+    setNameOfPlaces(names); //
+    console.log(nameOfPlaces)
+    
+  }, [events]);
 
   return (
     <div className="map-page" >
 
+      <FetchEvents  setEvents={setEvents} currentLocation={currentLocation}/>
 
       <div className="MapControls">
         <MapControls selectedType={selectedType} setSelectedType={setSelectedType}
           searchTerm={searchTerm} setSearchTerm={setSearchTerm}
           handleSearch={handleSearch} currentLocation={currentLocation}
           onFilteredPlacesChange={setPlaces}
+          nameOfPlaces = {nameOfPlaces}
         />
       </div>
 
@@ -201,7 +217,7 @@ const Map = ({ currentLocation, places, setPlaces }) => {
                 }}
                 options={{
                   icon: {
-                    url: getIconUrl(place.type, calculateAverageRating(place.reviews), hoveredMarkerId === placeId),
+                    url: getIconUrl(place.type, calculateAverageRating(place.reviews), hoveredMarkerId === placeId , place.name),
                     scaledSize: new window.google.maps.Size(isHovered ? 40 : 35, isHovered ? 40 : 35),
                   },
                 }}
@@ -238,7 +254,7 @@ const Map = ({ currentLocation, places, setPlaces }) => {
               onCloseClick={onCloseFunc}
               options={{ zIndex: 999 }}
             >
-              <PlaceInfo selectedPlace={selectedPlace} onReviewSubmit={handleReviewSubmit} currentLocation={currentLocation} />
+              <PlaceInfo selectedPlace={selectedPlace} onReviewSubmit={handleReviewSubmit} currentLocation={currentLocation} nameOfPlaces={nameOfPlaces} />
             </InfoWindow>
           )}
         </GoogleMap>

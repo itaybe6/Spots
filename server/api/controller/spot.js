@@ -3,6 +3,7 @@
 const Spot = require('../models/spot'); // Ensure this path is correct
 const Review = require('../models/review'); // Ensure this path is correct
 const fs = require('fs');
+const { verify } = require('crypto');
 
 
 // Function to save places to the database
@@ -29,7 +30,8 @@ const savePlacesToDatabase = async (places) => {
         rating: place.rating || 0,
         photo: place.photoUrl || "", // Changed from 'photo' to 'photoUrl'
         allTypes: place.types, // Use an array for all types
-        reviews: place.reviews || [] // In case there are reviews
+        reviews: place.reviews || [] , // In case there are reviews
+        verify :false
       });
 
       const savedSpot = await newSpot.save();

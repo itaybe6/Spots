@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const Event = require('../models/events'); 
+const Spot  = require('../models/spot'); 
 
 const bcrypt = require('bcrypt'); // For password hashing
 const jwt = require('jsonwebtoken'); // For generating tokens
@@ -41,9 +42,10 @@ const verifyBusiness = async (req, res) => {
               lng: parsedPlaceLocation.lng,
             },
         });
-
-        // שמירת המשתמש במסד הנתונים
         await newUser.save();
+
+      
+        // שמירת המשתמש במסד הנתונים
 
         res.status(201).json({ message: "Business verification submitted successfully" });
     } catch (error) {
@@ -92,6 +94,13 @@ const updateUserStatus = async (req, res) => {
   
       await User.findByIdAndUpdate(id, { status });
   
+      // אחרי שהאדמין מאשר את המשתמש , הנקודה הופתכ להיות מאושרת 
+      const spot = await Spot.findOneAndUpdate(
+        { placeId: placeId }, // קריטריון לחיפוש
+        { $set: { verify: true } }, // עדכון השדה
+        { new: true } // מחזיר את המסמך המעודכן
+    );
+
       res.status(200).json({ message: `User status updated to ${status}` });
     } catch (error) {
       console.error("Error updating user status:", error);
@@ -168,6 +177,26 @@ const updateUserStatus = async (req, res) => {
     }
   };
 
+
+
+  const getEventByPlaceName = async (req, res) => {
+    try {
+        const { placeName } = req.params; // קבלת השם מהנתיב
+
+        // חיפוש במסד הנתונים לפי שם המקום
+        const event = await Event.findOne({ placeName: placeName }).lean(); // lean כדי להחזיר אובייקט פשוט
+        if (!event) {
+            return res.status(404).json({ message: "Event not found" }); // אם לא נמצא
+        }
+
+        res.status(200).json(event); // החזרת האירוע
+    } catch (err) {
+        console.error("Error fetching event by place name:", err);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+  
 module.exports = {
     verifyBusiness,
     login,
@@ -175,5 +204,5 @@ module.exports = {
     getPendingUsers ,
     addEvent,
     getEvents ,
-
+    getEventByPlaceName
 };

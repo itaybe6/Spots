@@ -1,17 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import '../style/PlaceInfo.css';
+
 import AddReview from './AddReview';
 import ReviewsList from './ReviewsList';
 import VerifyBusinessForm from './VerifyBusinessForm';
-import '../style/PlaceInfo.css';
 import FetchPlaceDetails from './FetchPlaceDetails';
+import FetchEvent from './FetchEvent';
+import EventDetails from './EventDetails';
 
-const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation }) => {
-    const { name, allTypes, type, rating, photo, reviews, _id, location, placeId } = selectedPlace;
-
+const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation ,nameOfPlaces}) => {
+    const { name, type, rating, photo, reviews, _id, location, placeId ,verify } = selectedPlace;
     const [placeDetails, setPlaceDetails] = useState(null); // שמירת נתוני המקום
     const [showOpeningHours, setShowOpeningHours] = useState(false); // ניהול תצוגת שעות הפעילות
     const [showVerifyModal, setShowVerifyModal] = useState(false); // ניהול תצוגת טופס אימות
 
+
+
+    const [event, setEvent] = useState(null); 
+
+
+
+    
     const calculateDistance = (lat1, lng1, lat2, lng2) => {
         const toRad = (value) => (value * Math.PI) / 180;
         const R = 6371; // רדיוס כדור הארץ בקילומטרים
@@ -25,7 +34,6 @@ const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation }) => {
         return R * c;
     };
 
-    console.log(name)
     const calculateWalkingTime = (distanceKm) => {
         const walkingSpeedKmPerMin = 5 / 60; // מהירות הליכה ממוצעת בקמ"ש מחולקת ל-60 כדי לקבל ק"מ לדקה
         const walkingTimeInMinutes = distanceKm / walkingSpeedKmPerMin;
@@ -47,9 +55,11 @@ const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation }) => {
     const toggleOpeningHours = () => {
         setShowOpeningHours(!showOpeningHours); // לשנות את המצב של שעות הפעילות
     };
-
     return (
         <div className="place-info-container">
+
+            {/*משיכה של אירוע רק אם קיים במערך של הרשימת אירועים*/}
+            {nameOfPlaces.includes(name) && <FetchEvent placeName ={name} setEvent={setEvent}/>}
             <h2 className="place-info-title">{name}</h2>
             {placeDetails &&
                 <div className="right-buttons-container">
@@ -105,11 +115,12 @@ const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation }) => {
                 </div>
             </div>
             {photo && <img src={photo} alt={name} className="place-info-photo" />}
+            {event && <EventDetails event={event} />}
 
-            {/* Verify This Business Button */}
-            <button className="verify-button" onClick={() => setShowVerifyModal(true)}>
+            {!verify &&  <button className="verify-button" onClick={() => setShowVerifyModal(true)}>
                 Verify This Business
-            </button>
+            </button>}
+            
 
             {showVerifyModal && (
                 <div className="modal-overlay">

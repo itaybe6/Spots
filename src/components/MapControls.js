@@ -1,8 +1,10 @@
 import React from 'react';
 import RadiusFilter from './RadiusFilter';
 import SwitchButton from './SwitchButton';
+import SwitchButton2 from './SwitchButton2';
+
 import "../style/MapControls.css"
-const MapControls = ({ selectedType, setSelectedType, searchTerm, setSearchTerm, handleSearch, currentLocation, onFilteredPlacesChange }) => {
+const MapControls = ({ selectedType, setSelectedType, searchTerm, setSearchTerm, handleSearch, currentLocation, onFilteredPlacesChange,nameOfPlaces }) => {
   return (
     <div className="container">
       <div style={{ marginTop: '10px', marginBottom: '10px' }}>
@@ -43,6 +45,7 @@ const MapControls = ({ selectedType, setSelectedType, searchTerm, setSearchTerm,
       />
     
         <SwitchButton onFilteredPlacesChange={onFilteredPlacesChange} currentLocation={currentLocation} />
+        <SwitchButton2 onFilteredPlacesChange={onFilteredPlacesChange} currentLocation={currentLocation} nameOfPlaces = {nameOfPlaces}/>
     </div>
   );
 };

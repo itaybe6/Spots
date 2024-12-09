@@ -30,6 +30,8 @@
   flex-direction: column;
   overflow: hidden;
   transition: transform 0.3s, box-shadow 0.3s;
+  position: relative; /* כדי שהשכבה תהיה ממוקמת ביחס לכרטיס */
+  cursor: pointer; /* להפוך את הכרטיס ללחיץ */
 }
 
 .event-card:hover {
@@ -45,62 +47,14 @@
 /* עיצוב תמונה */
 .event-card-image {
   width: 100%;
-  height: 120px; /* גובה התמונה */
+  height: 230px; /* גובה התמונה */
   object-fit: cover;
   margin-bottom: 5px;
+  width: 100%;
+  object-fit: cover; /* התאמה לתמונה */
+  transition: transform 0.3s ease-in-out; /* אפקט hover */
 }
 
-/* תוכן הכרטיס */
-.event-card-content {
-  padding: 10px;
-  color: #fff;
-  display: flex;
-  justify-content: space-between; /* מציב את הכפתור מימין */
-  align-items: center; /* מיישר אנכית */
-}
-
-/* כותרת */
-.event-card-title {
-  font-size: 16px;
-  font-weight: bold;
-  margin: 0;
-}
-
-/* סוג האירוע */
-.event-card-type {
-  font-size: 14px;
-  margin: 0;
-  color: #a0a0a0;
-}
-
-/* תאריך ומיקום */
-.event-card-date,
-.event-card-location {
-  font-size: 13px; /* גודל טקסט */
-  margin: 0;
-  line-height: 1.4; /* מרווח שורות */
-  white-space: nowrap; /* מונע ירידה לשורה חדשה */
-  overflow: hidden; /* חותך את הטקסט */
-  text-overflow: ellipsis; /* מוסיף שלוש נקודות בסוף הטקסט אם הוא חורג */
-}
-
-/* כפתור */
-.event-card-button {
-  padding: 8px 12px;
-  background-color: #4caf50;
-  color: white;
-  text-align: center;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  white-space: nowrap; /* מבטיח שהטקסט בכפתור לא יגלוש */
-  margin-left: 10px; /* רווח בין הכפתור למלל */
-}
-
-.event-card-button:hover {
-  background-color: #45a049;
-} 
 
 
 .events-carousel::-webkit-scrollbar {
@@ -120,36 +74,6 @@
 
 .events-carousel::-webkit-scrollbar-thumb:hover {
   background: #000000; /* צבע בהובר על החלק הנע */
-}
-/* כרטיס להוספת אירוע */
-.add-event-card {
-  background-color: #4caf50;
-  border-radius: 10px;
-  width: 300px;
-  height: 200px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.add-event-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-}
-
-.add-event-icon {
-  font-size: 36px;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.add-event-text {
-  font-size: 16px;
-  font-weight: bold;
-  text-align: center;
 }
 
 /* מודאל עבור AddEvent */
@@ -251,17 +175,29 @@
   transform: scale(1.2); /* הגדלה קטנה של האייקון */
   transition: transform 0.3s;
 }
-.event-card-button {
-  display: inline-block;
-  padding: 10px 15px;
-  background-color: #4caf50;
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
-  text-align: center;
-  transition: background-color 0.3s;
+
+.event-card:hover .event-card-image {
+  transform: scale(1.05); /* הגדלת התמונה בעת hover */
+}
+.event-card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%; /* התפרסות על כל רוחב התמונה */
+  background-color: rgba(0, 0, 0, 0.6); /* רקע כהה שקוף */
+  color: #fff;
+  padding: 10px;
+  box-sizing: border-box; /* למנוע גלישה של הפדינג */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start; /* יישור הטקסט לשמאל */
+  text-align: left; /* יישור הטקסט */
+  font-family: 'Poppins', sans-serif;
+
 }
 
-.event-card-button:hover {
-  background-color: #45a049;
+.event-card-overlay h4,
+.event-card-overlay p {
+  margin: 5px 0;
 }

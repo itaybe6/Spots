@@ -43,6 +43,10 @@ const SpotSchema = new mongoose.Schema({
   allTypes: {
     type: [String],
     required: true
+  },
+  verify: {
+    type: Boolean,
+    default: false
   }
 });
 

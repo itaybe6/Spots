@@ -38,65 +38,7 @@ function App() {
     }
   }, [isLoaded]);
 
-  const eventsData = [
-    {
-      title: "The Substance",
-      date: "27/11",
-      time: "21:10",
-      location: "Cinema City, Be'er Sheva",
-      image: "https://example.com/image1.jpg",
-    },
-    
-    {
-      title: "Art Exhibition",
-      date: "30/11",
-      time: "18:00",
-      location: "Art Gallery, Tel Aviv",
-      image: "https://example.com/image2.jpg",
-    },
-    {
-      title: "Art Exhibition",
-      date: "30/11",
-      time: "18:00",
-      location: "Art Gallery, Tel Aviv",
-      image: "https://example.com/image2.jpg",
-    },
-    {
-      title: "Art Exhibition",
-      date: "30/11",
-      time: "18:00",
-      location: "Art Gallery, Tel Aviv",
-      image: "https://example.com/image2.jpg",
-    },
-    {
-      title: "Art Exhibition",
-      date: "30/11",
-      time: "18:00",
-      location: "Art Gallery, Tel Aviv",
-      image: "https://example.com/image2.jpg",
-    },
-    {
-      title: "Art Exhibition",
-      date: "30/11",
-      time: "18:00",
-      location: "Art Gallery, Tel Aviv",
-      image: "https://example.com/image2.jpg",
-    }, {
-      title: "Art Exhibition",
-      date: "30/11",
-      time: "18:00",
-      location: "Art Gallery, Tel Aviv",
-      image: "https://example.com/image2.jpg",
-    }, {
-      title: "Art Exhibition",
-      date: "30/11",
-      time: "18:00",
-      location: "Art Gallery, Tel Aviv",
-      image: "https://example.com/image2.jpg",
-    },
-    // ניתן להוסיף עוד אירועים
-  ];
-
+ 
   useEffect(() => {
     // בדיקה אם המשתמש הוא אדמין
     const token = localStorage.getItem('token');
@@ -115,7 +57,7 @@ function App() {
   return (
     <div className="App">
       {/* <AdminDashboard /> */}
-      <EventsCarousel events={eventsData} />
+      <EventsCarousel  currentLocation={currentLocation}/>
       <WelcomeOptionsModal />
       {currentLocation && (<Fetch setPlaces={setPlaces} currentLocation={currentLocation} />)}
       {/* <FetchApi setPlaces={setPlaces} currentLocation ={currentLocation}/> */}
