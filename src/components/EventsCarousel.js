@@ -91,7 +91,7 @@ const EventsCarousel = ({  currentLocation}) => {
     />
     <div className="event-card-overlay">
       <p>{event.eventType} - {event.eventTitle}</p>
-      <p>{event.placeName}</p>
+      <p>{event.placeName} - {new Date(event.dateTime).toLocaleDateString()}</p>
     </div>
   </div>
 ))}

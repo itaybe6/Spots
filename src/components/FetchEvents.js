@@ -58,10 +58,8 @@ const FetchEvents = ({ setEvents, currentLocation }) => {
   }, [currentLocation, setEvents]); // מאזין לשינוי במיקום הנוכחי
 
   // מציג הודעה בזמן טעינה
-  if (loading) {
     return <div>Loading...</div>;
-  }
-
+  
   // מציג הודעה אם יש שגיאה
   if (error) {
     return <div>{error}</div>;

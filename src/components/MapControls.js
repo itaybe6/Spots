@@ -41,7 +41,7 @@ const MapControls = ({ selectedType, setSelectedType, searchTerm, setSearchTerm,
 
       <RadiusFilter
         currentLocation={currentLocation}
-        setFilteredPlaces={onFilteredPlacesChange}
+        onFilteredPlacesChange={onFilteredPlacesChange}
       />
     
         <SwitchButton onFilteredPlacesChange={onFilteredPlacesChange} currentLocation={currentLocation} />

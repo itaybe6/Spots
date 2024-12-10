@@ -13,7 +13,7 @@ import Spa from '../assets/images/Spa.png';
 import Bar from '../assets/images/Bar.png';
 import Coffee from '../assets/images/Coffee.png';
 import Party from '../assets/images/Party.png';
-import unic from '../assets/images/unic.png';
+import event from '../assets/images/event.png';
 
 
 import restaurant_green from '../assets/images/restaurant_green.png';
@@ -46,8 +46,8 @@ const Map = ({ currentLocation, places, setPlaces }) => {
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [selectedType, setSelectedType] = useState('all'); // State to hold the selected type
   const [searchTerm, setSearchTerm] = useState(''); // State for the search term
-  const [events, setEvents] = useState([]); 
-  const [nameOfPlaces, setNameOfPlaces] = useState([]); 
+  const [events, setEvents] = useState([]);
+  const [nameOfPlaces, setNameOfPlaces] = useState([]);
 
   // const [IDSevents, setIDSevents] = useState([]); 
 
@@ -66,9 +66,9 @@ const Map = ({ currentLocation, places, setPlaces }) => {
 
 
 
-  const getIconUrl = (placeType, rating, isHovered,placeName) => {
-    if (placeName in nameOfPlaces) {
-     return unic
+  const getIconUrl = (placeType, rating, isHovered, placeName) => {
+    if ( nameOfPlaces.includes(placeName)) {
+      return event
     }
     const hoverIcons = {
       restaurant: Restaurant,
@@ -108,9 +108,9 @@ const Map = ({ currentLocation, places, setPlaces }) => {
     }
 
     // בחירת אייקון לפי הדירוג כאשר העכבר לא נמצא מעל המרקר
-    if (rating >= 4) 
+    if (rating >= 4)
       return greenIcons[placeType] || restaurant_green;
-    if (rating < 4 && rating >= 2.8) 
+    if (rating < 4 && rating >= 2.8)
       return yellowIcons[placeType] || restaurant_yellow;
     return redIcons[placeType] || restaurant_red;
   };
@@ -167,32 +167,27 @@ const Map = ({ currentLocation, places, setPlaces }) => {
     }
   };
 
-// שמות כל המקומות שיש להם אירוע
+  // שמות כל המקומות שיש להם אירוע
   useEffect(() => {
     const names = events.map(event => event.placeName); // יוצרים מערך של תעודות זהות
     setNameOfPlaces(names); //
     console.log(nameOfPlaces)
-    
+
   }, [events]);
 
   return (
     <div className="map-page" >
 
-      <FetchEvents  setEvents={setEvents} currentLocation={currentLocation}/>
+      <FetchEvents setEvents={setEvents} currentLocation={currentLocation} />
 
       <div className="MapControls">
         <MapControls selectedType={selectedType} setSelectedType={setSelectedType}
           searchTerm={searchTerm} setSearchTerm={setSearchTerm}
           handleSearch={handleSearch} currentLocation={currentLocation}
           onFilteredPlacesChange={setPlaces}
-          nameOfPlaces = {nameOfPlaces}
+          nameOfPlaces={nameOfPlaces}
         />
       </div>
-
-
-
-
-      {/* <AddEvent  placeName="Forum" placeLocation = {currentLocation}/> */}
 
       <div className="top-rated-wrapper">
         <TopRatedPlaces places={places} setSelectedPlace={setSelectedPlace} currentLocation={currentLocation} />
@@ -207,25 +202,27 @@ const Map = ({ currentLocation, places, setPlaces }) => {
         >
           {filteredPlaces.map((place) => {
             const placeId = place.place_id || place._id;
-            const isHovered = hoveredMarkerId === placeId
-            return (place.geometry?.location || place.location) ? (
-              <Marker
-                key={placeId}
-                position={{
-                  lat: place.geometry?.location?.lat || place.location?.lat,
-                  lng: place.geometry?.location?.lng || place.location?.lng,
-                }}
-                options={{
-                  icon: {
-                    url: getIconUrl(place.type, calculateAverageRating(place.reviews), hoveredMarkerId === placeId , place.name),
-                    scaledSize: new window.google.maps.Size(isHovered ? 40 : 35, isHovered ? 40 : 35),
-                  },
-                }}
-                onMouseOver={() => setHoveredMarkerId(placeId)}
-                onMouseOut={() => setHoveredMarkerId(null)}
-                onClick={() => setSelectedPlace(place)}
+            const isHovered = hoveredMarkerId === placeId;
+            const position = {
+              lat: place.geometry?.location?.lat || place.location?.lat,
+              lng: place.geometry?.location?.lng || place.location?.lng,
+            };
 
-              />
+            return (place.geometry?.location || place.location) ? (
+              <div key={placeId}>
+                <Marker
+                  position={position}
+                  options={{
+                    icon: {
+                      url: getIconUrl(place.type, calculateAverageRating(place.reviews), isHovered, place.name),
+                      scaledSize: new window.google.maps.Size(isHovered ? 40 : 35, isHovered ? 40 : 35),
+                    },
+                  }}
+                  onMouseOver={() => setHoveredMarkerId(placeId)}
+                  onMouseOut={() => setHoveredMarkerId(null)}
+                  onClick={() => setSelectedPlace(place)}
+                />
+              </div>
             ) : null;
           })}
 

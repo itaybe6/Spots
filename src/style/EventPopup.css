@@ -51,29 +51,14 @@
     background-color: #ff3c3c; /* צבע כפתור בלחיצה */
   }
   
-  /* תמונת האירוע */
-  .popup-image {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-  
-  .popup-image:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.3);
-  }
+ 
+ 
   
   /* תוכן הפופ-אפ */
   .popup-content {
     text-align: left;
   }
   
-  .popup-title {
-    font-size: 24px;
-    margin-bottom: 10px;
-    font-weight: bold;
-  }
   
   .popup-type,
   .popup-date,
@@ -153,5 +138,45 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 10px;
+  }
+ 
+  .popup-image-container {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .popup-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+  }
+  
+  .popup-share-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* שכבה שחורה שקופה */
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    font-weight: bold;
+    opacity: 0;
+    border-radius: 10px;
+    transition: opacity 0.3s ease;
+  }
+  
+  .popup-image-container:hover .popup-share-overlay {
+    opacity: 1; /* הצגת השכבה בהובר */
+  }
+  
+  .popup-share-icon {
+    width: 45px;
+    height: 45px;
+    
   }
   
