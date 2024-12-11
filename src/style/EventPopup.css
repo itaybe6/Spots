@@ -113,7 +113,7 @@
     padding: 10px 15px;
     background-color: #00b894;
     color: white;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: bold;
     text-decoration: none;
     border-radius: 10px;
@@ -178,5 +178,24 @@
     width: 45px;
     height: 45px;
     
+  }
+  .popup-details {
+    display: flex;
+    flex-direction: column; /* מסדר את הפרטים בשורות */
+    font-family: 'Montserrat', sans-serif; /* פונט מודרני */
+    font-size: 16px; /* גודל טקסט */
+    color: #fff; /* צבע טקסט לבן */
+  }
+  
+  .popup-detail {
+    display: flex;
+    align-items: center; /* מיישר את האייקון והטקסט אנכית */
+    gap: 5px; /* רווח בין האייקון לטקסט */
+  }
+  
+  .popup-icon img {
+    width: 25px; /* גודל האייקון */
+    height: 25px;
+    object-fit: contain; /* מוודא שהתמונה לא תתעוות */
   }
   

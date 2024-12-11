@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../style/EventPopup.css";
 import sahre from '../assets/images/share.png';
+import pin from '../assets/images/pin.png';
+import calendar from '../assets/images/calendar.png';
 
 const EventPopup = ({ event, onClose }) => {
   const [placeDetails, setPlaceDetails] = useState(null);
@@ -73,14 +75,31 @@ const EventPopup = ({ event, onClose }) => {
         <div className="popup-content">
           <h2 className="popup-title">{event.eventType} - {event.eventTitle}</h2>
 
-          <h3>{new Date(event.dateTime).toLocaleDateString()} in {event.placeName}</h3>
+
           <p className="popup-description">{event.eventDescription}</p>
+          <p className="popup-detail">
+            <span className="popup-icon">
+              <img src={calendar} alt="Date and Time Icon" />
+            </span>
+            {new Date(event.dateTime).toLocaleDateString()} at {new Date(event.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </p>
+
           <div className="popup-info">
-            <p className="popup-address">📍 Address: 123 Example St, Cityville</p>
+            <p className="popup-detail">
+              <span className="popup-icon">
+                <img src={pin} alt="Location Icon" />
+              </span>
+              {event.placeName}  {event.eventAddress}
+            </p>
             <a href="tel:+1234567890" className="popup-phone-button">
-              📞 Call Now
+              Call  📞
             </a>
           </div>
+        </div>
+
+
+        <div className="popup-details">
+
         </div>
       </div>
     </div>

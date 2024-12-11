@@ -1,10 +1,14 @@
-/* מיכל כללי של הקרוסלה */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+
+
+
 .events-carousel-container {
     position: absolute;
     top: 15px;
     left: 380px;
-    width: 1380px;
-    height: auto;
+    width: 1580px;
+    height: 230px;
     background-color: #00000052;
     padding: 20px;
     border-radius: 30px;
@@ -22,7 +26,7 @@
  /* עיצוב כרטיס */
 .event-card {
   background-color: #2e2e2e;
-  border-radius: 10px;
+  border-radius: 30px;
   width: 280px; /* רוחב הכרטיס */
   flex-shrink: 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -53,6 +57,8 @@
   width: 100%;
   object-fit: cover; /* התאמה לתמונה */
   transition: transform 0.3s ease-in-out; /* אפקט hover */
+  border-radius: 30px; /* עיגול הפינות */
+
 }
 
 
@@ -180,6 +186,7 @@
   transform: scale(1.05); /* הגדלת התמונה בעת hover */
 }
 .event-card-overlay {
+  height:90px;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -200,4 +207,11 @@
 .event-card-overlay h4,
 .event-card-overlay p {
   margin: 5px 0;
+}
+.events-carousel-container,
+.event-card,
+.event-card-overlay,
+.add-event-card {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700; /* הפיכת הטקסט ל-bold */
 }

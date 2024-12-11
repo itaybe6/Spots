@@ -8,7 +8,6 @@ const fs = require('fs'); //
 
 const path = require('path');
 
-
 const verifyBusiness = async (req, res) => {
     try {
         const { email, password, idNumber, placeId ,placeName ,placeLocation} = req.body;
@@ -139,7 +138,12 @@ const updateUserStatus = async (req, res) => {
         imageData = imageBuffer.toString('base64');
         fs.unlinkSync(req.file.path);
       }
-  
+      else {
+        const defaultImagePath = path.join(__dirname, '../../../src/assets/images/default-image.jpg');
+        const imageBuffer = fs.readFileSync(defaultImagePath);
+        imageData = imageBuffer.toString('base64');
+    }
+
       // יצירת אובייקט חדש של אירוע
       const newEvent = new Event({
         placeName,
@@ -168,7 +172,10 @@ const updateUserStatus = async (req, res) => {
 
   const getEvents = async (req, res) => {
     try {
-      // שאילתת MongoDB לשליפת כל האירועים
+      // מחיקת כל האירועים שעבר זמנם
+      const now = new Date();
+      await Event.deleteMany({ dateTime: { $lt: now } });  
+
       const events = await Event.find();
       res.status(200).json(events); // החזרת האירועים בתור JSON
     } catch (error) {
