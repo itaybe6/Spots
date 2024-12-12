@@ -3,7 +3,7 @@ import AddEvent from "./AddEvents";
 import FetchEvents from "./FetchEvents";
 import EventPopup from "./EventPopup";
 import "../style/EventsCarousel.css";
-const EventsCarousel = ({  currentLocation}) => {
+const EventsCarousel = ({ currentLocation }) => {
   const [showAddEvent, setShowAddEvent] = useState(false);
   const [isUser, setIsUser] = useState(false);
   const [placeName, setPlaceName] = useState(false);
@@ -47,7 +47,7 @@ const EventsCarousel = ({  currentLocation}) => {
     if (token) {
       try {
         const decodedToken = JSON.parse(atob(token.split('.')[1])); // פענוח ה-Token
-        setPlaceName(decodedToken.placeName)
+        setPlaceName(decodeURIComponent(decodedToken.placeName));
         setPlaceLocation(decodedToken.placeLocation)
         setIsUser(true)
       } catch (error) {
@@ -78,23 +78,23 @@ const EventsCarousel = ({  currentLocation}) => {
           </div>
         </div>}
 
-{eventss.map((event, index) => (
-  <div
-    className="event-card"
-    key={index}
-    onClick={() => handleButtonClick(event)} // הפיכת כל התמונה ללחיצה
-  >
-    <img
-      src={`data:image/jpeg;base64,${event.image}`}
-      alt={event.eventTitle}
-      className="event-card-image"
-    />
-    <div className="event-card-overlay">
-      <p>{event.eventType} - {event.eventTitle}</p>
-      <p>{event.placeName} - {new Date(event.dateTime).toLocaleDateString()}</p>
-    </div>
-  </div>
-))}
+        {eventss.map((event, index) => (
+          <div
+            className="event-card"
+            key={index}
+            onClick={() => handleButtonClick(event)} // הפיכת כל התמונה ללחיצה
+          >
+            <img
+              src={`data:image/jpeg;base64,${event.image}`}
+              alt={event.eventTitle}
+              className="event-card-image"
+            />
+            <div className="event-card-overlay">
+              <p>{event.eventType} - {event.eventTitle}</p>
+              <p>{event.placeName} - {new Date(event.dateTime).toLocaleDateString()}</p>
+            </div>
+          </div>
+        ))}
 
 
       </div>
@@ -106,7 +106,7 @@ const EventsCarousel = ({  currentLocation}) => {
       {/* מציג את רכיב AddEvent אם המשתמש לחץ על כפתור ההוספה */}
       {showAddEvent && (
         <div className="add-event-modal">
-          <AddEvent placeName={placeName} placeLocation={placeLocation} />
+          <AddEvent placeName={placeName} placeLocation={placeLocation} handleCloseAddEvent={handleCloseAddEvent} />
           <button className="close-add-event" onClick={handleCloseAddEvent}>
             Close
           </button>

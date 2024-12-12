@@ -251,7 +251,11 @@ const Map = ({ currentLocation, places, setPlaces }) => {
               onCloseClick={onCloseFunc}
               options={{ zIndex: 999 }}
             >
+                <div className="custom-info-window">
+
               <PlaceInfo selectedPlace={selectedPlace} onReviewSubmit={handleReviewSubmit} currentLocation={currentLocation} nameOfPlaces={nameOfPlaces} />
+              </div>
+
             </InfoWindow>
           )}
         </GoogleMap>

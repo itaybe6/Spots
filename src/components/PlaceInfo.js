@@ -56,11 +56,16 @@ const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation ,nameOfPlace
         setShowOpeningHours(!showOpeningHours); // לשנות את המצב של שעות הפעילות
     };
     return (
+
+        <div>
+            {event && <EventDetails event={event} />}
+
         <div className="place-info-container">
 
             {/*משיכה של אירוע רק אם קיים במערך של הרשימת אירועים*/}
             {nameOfPlaces.includes(name) && <FetchEvent placeName ={name} setEvent={setEvent}/>}
             <h2 className="place-info-title">{name}</h2>
+            
             {placeDetails &&
                 <div className="right-buttons-container">
                     {placeDetails.formatted_phone_number && (
@@ -115,7 +120,6 @@ const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation ,nameOfPlace
                 </div>
             </div>
             {photo && <img src={photo} alt={name} className="place-info-photo" />}
-            {event && <EventDetails event={event} />}
 
             {!verify &&  <button className="verify-button" onClick={() => setShowVerifyModal(true)}>
                 Verify This Business
@@ -140,7 +144,9 @@ const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation ,nameOfPlace
                 <ReviewsList reviews={reviews} />
             </div>
             <FetchPlaceDetails placeId={placeId} handleDetails={(details) => setPlaceDetails(details)} />
+        </div> 
         </div>
+
     );
 };
 
