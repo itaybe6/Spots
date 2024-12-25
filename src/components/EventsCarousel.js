@@ -39,7 +39,6 @@ const EventsCarousel = ({ currentLocation }) => {
     }, 10);
     return () => clearInterval(interval); // ניקוי ה-interval
   }, [direction]);
-
   // בדיקה אם התחבר בתור בעל עסק ורק אם כן יש לו את האפשרות להוסיף אירוע חדש 
   useEffect(() => {
     const token = localStorage.getItem('authToken');

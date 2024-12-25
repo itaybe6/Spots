@@ -207,6 +207,7 @@ const updateUserStatus = async (req, res) => {
     }
 };
 
+
   
 module.exports = {
     verifyBusiness,

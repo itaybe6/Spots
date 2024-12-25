@@ -4,7 +4,7 @@ import "../style/EventDetails.css";
 
 
 
-const EventDetails = ({ event }) => {
+const EventDetails = ({ event  }) => {
     const handleShare = () => {
         if (navigator.share) {
           navigator

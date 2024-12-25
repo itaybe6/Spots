@@ -15,6 +15,7 @@ function App() {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false); // מצב עבור אדמין
 
+
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries: libraries,
@@ -38,26 +39,29 @@ function App() {
     }
   }, [isLoaded]);
 
- 
+
   useEffect(() => {
     // בדיקה אם המשתמש הוא אדמין
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('authToken');
     if (token) {
       try {
         const decodedToken = JSON.parse(atob(token.split('.')[1])); // פענוח ה-Token
         if (decodedToken.role === 'admin') {
           setIsAdmin(true); // המשתמש הוא אדמין
+
         }
       } catch (error) {
         console.error('Invalid token:', error);
       }
     }
   }, []);
-  
+
+
+
   return (
     <div className="App">
-      {/* <AdminDashboard /> */}
-      <EventsCarousel  currentLocation={currentLocation}/>
+      {/* {isAdmin &&  <AdminDashboard /> } */}
+      <EventsCarousel currentLocation={currentLocation} />
       <WelcomeOptionsModal />
       {currentLocation && (<Fetch setPlaces={setPlaces} currentLocation={currentLocation} />)}
       {/* <FetchApi setPlaces={setPlaces} currentLocation ={currentLocation}/> */}
