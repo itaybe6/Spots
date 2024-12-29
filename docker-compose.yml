@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./server # בונה את השרת מתיקיית server
+    ports:
+      - "5001:5001" # מחבר בין פורט 5000 במחשב לפורט 5000 בקונטיינר
+    volumes:
+      - ./server:/usr/src/app # מאפשר שינויי קוד בזמן אמת
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - proxy # backend מחכה שה-proxy יעלה קודם
+
+  frontend:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+
+
+  proxy:
+    image: node:20
+    command: npx local-cors-proxy --proxyUrl https://maps.googleapis.com
+    ports:
+      - "8010:8010"
