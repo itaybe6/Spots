@@ -3,13 +3,16 @@ import AddEvent from "./AddEvents";
 import FetchEvents from "./FetchEvents";
 import EventPopup from "./EventPopup";
 import "../style/EventsCarousel.css";
-const EventsCarousel = ({ currentLocation }) => {
+import { useLocation } from '../Context/LocationContext';
+
+const EventsCarousel = () => {
   const [showAddEvent, setShowAddEvent] = useState(false);
   const [isUser, setIsUser] = useState(false);
   const [placeName, setPlaceName] = useState(false);
   const [placeLocation, setPlaceLocation] = useState(false);
   const [eventss, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null); // שמירת האירוע שנבחר
+  const { currentLocation, setCurrentLocation } = useLocation();
 
 
   // for the scrolling
@@ -66,7 +69,7 @@ const EventsCarousel = ({ currentLocation }) => {
 
   return (
     <div className="events-carousel-container">
-      <FetchEvents setEvents={setEvents} currentLocation={currentLocation} />
+      <FetchEvents setEvents={setEvents} />
       <div className="events-carousel" ref={carouselRef}>
 
 

@@ -8,6 +8,7 @@ import WelcomeOptionsModal from "./components/WelcomeOptionsModal";
 import AdminDashboard from "./components/AdminDashboard";
 
 import EventsCarousel from "./components/EventsCarousel";
+import { LocationProvider } from './Context/LocationContext';
 
 
 function App() {
@@ -60,18 +61,21 @@ function App() {
 
   return (
     <div className="App">
-      {/* {isAdmin &&  <AdminDashboard /> } */}
-      <EventsCarousel currentLocation={currentLocation} />
-      <WelcomeOptionsModal />
-      {currentLocation && (<Fetch setPlaces={setPlaces} currentLocation={currentLocation} />)}
-      {/* <FetchApi setPlaces={setPlaces} currentLocation ={currentLocation}/> */}
-      {places && currentLocation && (
-        <Map
-          currentLocation={currentLocation}
-          places={places}
-          setPlaces={setPlaces}
-        />
-      )}
+      <LocationProvider>
+
+        {/* {isAdmin &&  <AdminDashboard /> } */}
+        <EventsCarousel currentLocation={currentLocation} />
+        <WelcomeOptionsModal />
+        {currentLocation && (<Fetch setPlaces={setPlaces} currentLocation={currentLocation} />)}
+        {/* <FetchApi setPlaces={setPlaces} currentLocation ={currentLocation}/> */}
+        {places && currentLocation && (
+          <Map
+            currentLocation={currentLocation}
+            places={places}
+            setPlaces={setPlaces}
+          />
+        )}
+      </LocationProvider>
     </div>
   )
 }

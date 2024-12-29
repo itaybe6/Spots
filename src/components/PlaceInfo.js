@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import '../style/PlaceInfo.css';
-
 import AddReview from './AddReview';
 import ReviewsList from './ReviewsList';
 import VerifyBusinessForm from './VerifyBusinessForm';
 import FetchPlaceDetails from './FetchPlaceDetails';
 import FetchEvent from './FetchEvent';
 import EventDetails from './EventDetails';
+import { useLocation } from '../Context/LocationContext';
 
-const PlaceInfo = ({ selectedPlace, onReviewSubmit, currentLocation, nameOfPlaces }) => {
+const PlaceInfo = ({ selectedPlace, onReviewSubmit, nameOfPlaces }) => {
     const { name, type, rating, photo, reviews, _id, location, placeId, verify } = selectedPlace;
     const [placeDetails, setPlaceDetails] = useState(null); // שמירת נתוני המקום
     const [showOpeningHours, setShowOpeningHours] = useState(false); // ניהול תצוגת שעות הפעילות
     const [showVerifyModal, setShowVerifyModal] = useState(false); // ניהול תצוגת טופס אימות
+    const { currentLocation, setCurrentLocation } = useLocation();
 
 
 
