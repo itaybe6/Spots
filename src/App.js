@@ -41,8 +41,17 @@ function App() {
 
   return (
     <div className="App">
-      <VerifyBusinessForm2 />
-    </div>
+     {/* {isAdmin &&  <AdminDashboard /> } */}
+     <EventsCarousel />
+      <WelcomeOptionsModal />
+      {currentLocation && (<Fetch setPlaces={setPlaces} />)}
+      {/* <FetchApi setPlaces={setPlaces} currentLocation ={currentLocation}/> */}
+      {places && currentLocation && (
+        <Map
+          places={places}
+          setPlaces={setPlaces}
+        />
+      )}    </div>
   )
 }
 export default App;
